@@ -23,11 +23,44 @@
             box-sizing: border-box;
         }
 
+        /* Prevenir overflow horizontal en todos los elementos */
+        *, *::before, *::after {
+            max-width: 100%;
+        }
+
+        /* Contenedores principales sin overflow */
+        .navbar,
+        .hero,
+        .lifestyle-section,
+        .productos-section,
+        .versatilidad-section,
+        .tribu-section,
+        .footer {
+            overflow-x: hidden;
+            width: 100%;
+        }
+
         body {
             font-family: 'Oswald', sans-serif;
             background: var(--negro-profundo);
             color: var(--plateado);
             overflow-x: hidden;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer 10+ */
+        }
+
+        /* Ocultar scrollbar en WebKit browsers (Chrome, Safari, Edge) */
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        html {
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* Internet Explorer 10+ */
+        }
+
+        html::-webkit-scrollbar {
+            display: none;
         }
 
         /* Cursor personalizado */
