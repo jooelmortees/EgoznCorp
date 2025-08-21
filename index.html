@@ -868,8 +868,135 @@
             transition: all 0.3s;
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
+        /* ===== RESPONSIVE DESIGN ===== */
+
+        /* Extra Large Screens (1400px+) */
+        @media (min-width: 1400px) {
+
+            .nav-container,
+            .versatilidad-container,
+            .tribu-content,
+            .footer-content {
+                max-width: 1600px;
+            }
+
+            .hero-logo {
+                font-size: 180px;
+            }
+
+            .section-title {
+                font-size: 84px;
+            }
+        }
+
+        /* Large Screens (1200px - 1399px) */
+        @media (max-width: 1399px) {
+
+            .lifestyle-grid,
+            .productos-grid {
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            }
+        }
+
+        /* Medium-Large Screens (992px - 1199px) */
+        @media (max-width: 1199px) {
+            .nav-container {
+                padding: 0 15px;
+            }
+
+            .hero-logo {
+                font-size: 120px;
+                letter-spacing: 15px;
+            }
+
+            .section-title {
+                font-size: 64px;
+                letter-spacing: 8px;
+            }
+
+            .lifestyle-grid,
+            .productos-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 30px;
+            }
+
+            .versatilidad-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Tablets (768px - 991px) */
+        @media (max-width: 991px) {
+            .navbar {
+                padding: 12px 0;
+            }
+
+            .hero-logo {
+                font-size: 100px;
+                letter-spacing: 12px;
+            }
+
+            .hero-slogan {
+                font-size: 28px;
+                letter-spacing: 4px;
+            }
+
+            .hero-subslogan {
+                font-size: 18px;
+                letter-spacing: 2px;
+            }
+
+            .section-title {
+                font-size: 56px;
+                letter-spacing: 6px;
+            }
+
+            .section-subtitle {
+                font-size: 20px;
+            }
+
+            .lifestyle-grid,
+            .productos-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 25px;
+            }
+
+            .versatilidad-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0;
+            }
+
+            .valores-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 30px;
+            }
+
+            .cta-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .cta-button {
+                padding: 18px 40px;
+                font-size: 18px;
+            }
+
+            .filtros-container {
+                gap: 15px;
+            }
+
+            .filtro-btn {
+                padding: 12px 25px;
+                font-size: 14px;
+            }
+        }
+
+        /* Mobile Large (576px - 767px) */
+        @media (max-width: 767px) {
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
             .nav-menu {
                 position: fixed;
                 left: -100%;
@@ -881,53 +1008,100 @@
                 transition: 0.3s;
                 padding: 40px 0;
                 border-bottom: 2px solid var(--plateado);
+                z-index: 1001;
             }
 
             .nav-menu.active {
                 left: 0;
             }
 
-            .mobile-menu-toggle {
-                display: flex;
+            .hero {
+                height: 100vh;
+                padding: 0 20px;
             }
 
             .hero-logo {
                 font-size: 80px;
-                letter-spacing: 10px;
+                letter-spacing: 8px;
+                margin-bottom: 15px;
             }
 
             .hero-slogan {
                 font-size: 24px;
+                letter-spacing: 3px;
+                margin-bottom: 15px;
             }
 
             .hero-subslogan {
                 font-size: 16px;
+                letter-spacing: 1px;
+                margin-bottom: 30px;
             }
 
             .lifestyle-badges {
                 flex-direction: column;
                 gap: 15px;
+                margin-bottom: 30px;
+            }
+
+            .lifestyle-badge {
+                padding: 8px 16px;
+                font-size: 14px;
             }
 
             .cta-button {
                 padding: 15px 30px;
                 font-size: 16px;
+                letter-spacing: 2px;
             }
 
             .section-title {
                 font-size: 48px;
+                letter-spacing: 4px;
+                margin-bottom: 15px;
             }
 
-            .lifestyle-grid {
+            .section-subtitle {
+                font-size: 18px;
+                margin-bottom: 40px;
+            }
+
+            .lifestyle-grid,
+            .productos-grid {
                 grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .versatilidad-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .versatilidad-item {
+                height: 350px;
+            }
+
+            .valores-grid {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+
+            .valor-card {
+                padding: 30px;
             }
 
             .modal-content {
                 grid-template-columns: 1fr;
+                width: 95%;
+                max-height: 90vh;
+                overflow-y: auto;
             }
 
             .modal-imagen {
-                height: 400px;
+                height: 300px;
+            }
+
+            .modal-info {
+                padding: 30px;
             }
 
             .carrito-sidebar {
@@ -935,8 +1109,236 @@
                 right: -100%;
             }
 
-            .versatilidad-grid {
+            .tribu-content {
+                padding: 0 15px;
+            }
+
+            .tribu-text {
+                font-size: 18px;
+            }
+
+            .tribu-highlight {
+                font-size: 24px;
+                margin: 30px 0;
+            }
+
+            .footer-content {
                 grid-template-columns: 1fr;
+                gap: 30px;
+                text-align: center;
+            }
+        }
+
+        /* Mobile Medium (480px - 575px) */
+        @media (max-width: 575px) {
+            .hero-logo {
+                font-size: 70px;
+                letter-spacing: 6px;
+            }
+
+            .hero-slogan {
+                font-size: 20px;
+                letter-spacing: 2px;
+            }
+
+            .hero-subslogan {
+                font-size: 14px;
+            }
+
+            .section-title {
+                font-size: 42px;
+                letter-spacing: 3px;
+            }
+
+            .lifestyle-title,
+            .versatilidad-titulo {
+                font-size: 28px;
+            }
+
+            .filtros-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .filtro-btn {
+                width: 100%;
+                padding: 15px;
+            }
+
+            .versatilidad-item {
+                height: 300px;
+            }
+        }
+
+        /* Mobile Small (320px - 479px) */
+        @media (max-width: 479px) {
+            .nav-container {
+                padding: 0 10px;
+            }
+
+            .hero {
+                padding: 0 15px;
+            }
+
+            .hero-logo {
+                font-size: 60px;
+                letter-spacing: 4px;
+            }
+
+            .hero-slogan {
+                font-size: 18px;
+                letter-spacing: 1px;
+            }
+
+            .hero-subslogan {
+                font-size: 13px;
+            }
+
+            .section-title {
+                font-size: 36px;
+                letter-spacing: 2px;
+            }
+
+            .section-subtitle {
+                font-size: 16px;
+            }
+
+            .lifestyle-card,
+            .producto-card {
+                margin: 0 5px;
+            }
+
+            .lifestyle-overlay,
+            .versatilidad-info {
+                padding: 25px;
+            }
+
+            .lifestyle-title,
+            .versatilidad-titulo {
+                font-size: 24px;
+            }
+
+            .lifestyle-description,
+            .versatilidad-desc {
+                font-size: 14px;
+            }
+
+            .cta-button {
+                padding: 12px 25px;
+                font-size: 14px;
+            }
+
+            .versatilidad-item {
+                height: 280px;
+            }
+
+            .valor-card {
+                padding: 20px;
+            }
+
+            .valor-titulo {
+                font-size: 24px;
+            }
+
+            .modal-info {
+                padding: 20px;
+            }
+        }
+
+        /* Touch Device Optimizations */
+        @media (hover: none) and (pointer: coarse) {
+
+            .lifestyle-card:hover,
+            .producto-card:hover,
+            .versatilidad-item:hover {
+                transform: none;
+            }
+
+            .lifestyle-overlay {
+                transform: translateY(60%);
+            }
+
+            .versatilidad-info {
+                transform: translateY(65%);
+            }
+
+            .lifestyle-card:active .lifestyle-overlay,
+            .versatilidad-item:active .versatilidad-info {
+                transform: translateY(0);
+            }
+        }
+
+        /* High DPI Displays */
+        @media (-webkit-min-device-pixel-ratio: 2),
+        (min-resolution: 192dpi) {
+
+            .hero-logo,
+            .section-title {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+        }
+
+        /* Touch Device Specific Styles */
+        .touch-device .lifestyle-card.touch-active,
+        .touch-device .versatilidad-item.touch-active {
+            transform: scale(0.98);
+            transition: transform 0.1s ease;
+        }
+
+        .touch-device .lifestyle-card.touch-active .lifestyle-overlay,
+        .touch-device .versatilidad-item.touch-active .versatilidad-info {
+            transform: translateY(0);
+        }
+
+        /* Improve button touch targets */
+        @media (max-width: 767px) {
+
+            .cta-button,
+            .filtro-btn,
+            .nav-menu a {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .mobile-menu-toggle {
+                min-width: 44px;
+                min-height: 44px;
+                padding: 8px;
+            }
+
+            .cerrar-carrito,
+            .modal-close {
+                min-width: 44px;
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        /* Prevent zoom on input focus in iOS */
+        @media screen and (-webkit-min-device-pixel-ratio: 0) {
+
+            select,
+            textarea,
+            input[type="text"],
+            input[type="password"],
+            input[type="datetime"],
+            input[type="datetime-local"],
+            input[type="date"],
+            input[type="month"],
+            input[type="time"],
+            input[type="week"],
+            input[type="number"],
+            input[type="email"],
+            input[type="url"],
+            input[type="search"],
+            input[type="tel"],
+            input[type="color"] {
+                font-size: 16px;
             }
         }
 
@@ -1305,18 +1707,54 @@
             }, 2000);
         });
 
-        // Mobile Menu
+        // Mobile Menu con mejoras responsive
         function toggleMenu() {
             const navMenu = document.getElementById('navMenu');
+            const body = document.body;
+
             navMenu.classList.toggle('active');
+
+            // Prevenir scroll cuando el menú está abierto en móvil
+            if (navMenu.classList.contains('active')) {
+                body.style.overflow = 'hidden';
+            } else {
+                body.style.overflow = '';
+            }
         }
+
+        // Cerrar menú móvil al hacer click en un enlace
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                const navMenu = document.getElementById('navMenu');
+                if (navMenu.classList.contains('active')) {
+                    toggleMenu();
+                }
+            });
+        });
+
+        // Cerrar menú móvil al redimensionar ventana
+        window.addEventListener('resize', () => {
+            const navMenu = document.getElementById('navMenu');
+            if (window.innerWidth > 767 && navMenu.classList.contains('active')) {
+                toggleMenu();
+            }
+        });
 
         // Carrito
         let carrito = [];
 
         function toggleCarrito() {
             const carritoSidebar = document.getElementById('carritoSidebar');
+            const body = document.body;
+
             carritoSidebar.classList.toggle('active');
+
+            // Prevenir scroll cuando el carrito está abierto
+            if (carritoSidebar.classList.contains('active')) {
+                body.style.overflow = 'hidden';
+            } else {
+                body.style.overflow = '';
+            }
         }
 
         function agregarAlCarrito() {
@@ -1901,8 +2339,63 @@
 
 
 
+        // Mejoras responsive adicionales
+
+        // Detectar orientación del dispositivo
+        function handleOrientationChange() {
+            const isLandscape = window.innerWidth > window.innerHeight;
+            document.body.classList.toggle('landscape', isLandscape);
+
+            // Ajustar altura del hero en móviles landscape
+            if (window.innerWidth <= 767 && isLandscape) {
+                document.querySelector('.hero').style.height = '100vh';
+            }
+        }
+
+        window.addEventListener('orientationchange', handleOrientationChange);
+        window.addEventListener('resize', handleOrientationChange);
+        handleOrientationChange();
+
+        // Mejorar scroll suave en todos los dispositivos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offsetTop = target.offsetTop - (window.innerWidth <= 767 ? 80 : 100);
+                    window.scrollTo({
+                        top: offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Optimizar rendimiento en scroll para móviles
+        let ticking = false;
+        function updateScrollIndicator() {
+            const scrolled = window.pageYOffset;
+            const maxHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrolled / maxHeight) * 100;
+
+            const indicator = document.getElementById('scrollIndicator');
+            if (indicator) {
+                indicator.style.width = scrollPercent + '%';
+            }
+
+            ticking = false;
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                requestAnimationFrame(updateScrollIndicator);
+                ticking = true;
+            }
+        });
+
         // Finalización
-        console.log('EGOZN Lifestyle Store - Ready to adapt to your life! 🚀');
+        console.log('EGOZN Lifestyle Store - Fully Responsive & Ready! 🚀📱💻');
+        console.log('Optimized for Mobile, Tablet, Desktop & Touch devices');
 
 
     </script>
