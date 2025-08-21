@@ -869,17 +869,33 @@
 
         .modal-close {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 15px;
+            right: 15px;
             font-size: 40px;
             color: var(--plateado);
             cursor: pointer;
             transition: all 0.3s;
+            z-index: 10;
+            background: rgba(10, 10, 10, 0.8);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .modal-close:hover {
             color: var(--plateado-brillante);
             transform: rotate(90deg);
+            background: rgba(10, 10, 10, 0.9);
+        }
+
+        .modal-close:active {
+            transform: scale(0.95);
+            background: rgba(10, 10, 10, 1);
         }
 
         /* Loading animation */
@@ -1058,6 +1074,17 @@
 
         /* Mobile Large (576px - 767px) */
         @media (max-width: 767px) {
+            .modal-close {
+                top: 5px;
+                right: 5px;
+                width: 55px;
+                height: 55px;
+                font-size: 30px;
+                background: rgba(10, 10, 10, 0.95);
+                border: 3px solid var(--plateado);
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+            }
+
             .mobile-menu-toggle {
                 display: flex;
             }
@@ -1384,11 +1411,24 @@
 
             .cerrar-carrito,
             .modal-close {
-                min-width: 44px;
-                min-height: 44px;
+                min-width: 50px;
+                min-height: 50px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                font-size: 35px;
+                top: 10px;
+                right: 10px;
+                background: rgba(10, 10, 10, 0.9);
+                border: 2px solid var(--plateado);
+                border-radius: 50%;
+                touch-action: manipulation;
+            }
+
+            .modal-close:active {
+                transform: scale(0.9);
+                background: var(--plateado);
+                color: var(--negro-profundo);
             }
         }
 
@@ -1895,7 +1935,24 @@
         });
 
         function cerrarModal() {
-            document.getElementById('productoModal').style.display = 'none';
+            const modal = document.getElementById('productoModal');
+            if (modal) {
+                modal.style.display = 'none';
+                // Restaurar scroll del body si estaba bloqueado
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Mejorar la apertura del modal para móvil
+        function abrirModal(elemento) {
+            const modal = document.getElementById('productoModal');
+            if (modal) {
+                modal.style.display = 'flex';
+                // Bloquear scroll del body en móvil
+                if (window.innerWidth <= 767) {
+                    document.body.style.overflow = 'hidden';
+                }
+            }
         }
 
         // Filtros
@@ -2085,6 +2142,42 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log('%cEGOZN LIFESTYLE', 'font-size: 50px; font-weight: bold; background: linear-gradient(45deg, #c0c0c0, #e8e8e8); -webkit-background-clip: text; -webkit            -text-fill-color: transparent;');
             console.log('%cNo es una marca, es un estilo de vida', 'font-size: 20px; color: #c0c0c0;');
+
+            // Mejorar funcionalidad del modal close en móvil
+            const modalClose = document.querySelector('.modal-close');
+            if (modalClose) {
+                // Agregar eventos táctiles específicos
+                modalClose.addEventListener('touchstart', function (e) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(0.9)';
+                    this.style.background = 'var(--plateado)';
+                    this.style.color = 'var(--negro-profundo)';
+                });
+
+                modalClose.addEventListener('touchend', function (e) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(1)';
+                    this.style.background = 'rgba(10, 10, 10, 0.9)';
+                    this.style.color = 'var(--plateado)';
+                    // Ejecutar el cierre del modal
+                    setTimeout(() => cerrarModal(), 100);
+                });
+
+                // Prevenir comportamiento por defecto en móvil
+                modalClose.addEventListener('touchmove', function (e) {
+                    e.preventDefault();
+                });
+            }
+
+            // Cerrar modal al tocar fuera de él en móvil
+            const modal = document.getElementById('productoModal');
+            if (modal) {
+                modal.addEventListener('touchstart', function (e) {
+                    if (e.target === this) {
+                        cerrarModal();
+                    }
+                });
+            }
         });
 
         // Animación de texto cambiante con frases mejoradas
