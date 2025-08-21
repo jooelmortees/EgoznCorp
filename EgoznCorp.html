@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGOZN - No es una marca, es un estilo de vida</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --negro-profundo: #0a0a0a;
+            --gris-carbon: #1a1a1a;
+            --gris-oscuro: #2a2a2a;
+            --plateado: #c0c0c0;
+            --plateado-brillante: #e8e8e8;
+            --rojo-tribal: #8b0000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Oswald', sans-serif;
+            background: var(--negro-profundo);
+            color: var(--plateado);
+            overflow-x: hidden;
+        }
+
+        /* Cursor personalizado */
+        body {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><polygon points="10,2 2,18 18,18" fill="%23c0c0c0" stroke="%23000" stroke-width="1"/></svg>'), auto;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            border-bottom: 2px solid var(--plateado);
+            animation: glowBorder 3s ease-in-out infinite;
+        }
+
+        @keyframes glowBorder {
+
+            0%,
+            100% {
+                box-shadow: 0 0 10px var(--plateado);
+            }
+
+            50% {
+                box-shadow: 0 0 20px var(--plateado-brillante);
+            }
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+
+
+
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        .nav-menu a {
+            color: var(--plateado);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 2px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--plateado-brillante);
+            transition: width 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: var(--plateado-brillante);
+            text-shadow: 0 0 10px var(--plateado);
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1920') center/cover;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 0%, rgba(10, 10, 10, 0.7) 50%, rgba(10, 10, 10, 0.95) 100%);
+            z-index: 1;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            animation: fadeInUp 1.5s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-logo {
+            font-size: 150px;
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 20px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--plateado), var(--plateado-brillante), var(--plateado));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: metalShine 3s linear infinite;
+        }
+
+        @keyframes metalShine {
+            0% {
+                background-position: -200% center;
+            }
+
+            100% {
+                background-position: 200% center;
+            }
+        }
+
+        .hero-slogan {
+            font-size: 32px;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            color: var(--plateado-brillante);
+            text-shadow: 0 0 30px rgba(192, 192, 192, 0.8);
+            font-weight: 700;
+        }
+
+        .hero-subslogan {
+            font-size: 20px;
+            letter-spacing: 3px;
+            margin-bottom: 40px;
+            color: var(--plateado);
+            text-shadow: 0 0 20px rgba(192, 192, 192, 0.5);
+            line-height: 1.6;
+            transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform-origin: center;
+            will-change: transform, opacity, filter;
+        }
+
+        .lifestyle-badges {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .lifestyle-badge {
+            padding: 10px 20px;
+            border: 1px solid var(--plateado);
+            font-size: 16px;
+            letter-spacing: 2px;
+            background: rgba(42, 42, 42, 0.5);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+        }
+
+        .lifestyle-badge:hover {
+            background: var(--plateado);
+            color: var(--negro-profundo);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(192, 192, 192, 0.3);
+        }
+
+        .cta-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            padding: 20px 50px;
+            background: linear-gradient(135deg, var(--gris-carbon), var(--gris-oscuro));
+            border: 2px solid var(--plateado);
+            color: var(--plateado-brillante);
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            clip-path: polygon(10% 0%, 100% 0%, 90% 100%, 0% 100%);
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--plateado), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px var(--plateado);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        /* Sección Estilo de Vida */
+        .lifestyle-section {
+            padding: 100px 0;
+            background: var(--negro-profundo);
+            position: relative;
+        }
+
+        .lifestyle-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            max-width: 1400px;
+            margin: 60px auto 0;
+            padding: 0 20px;
+        }
+
+        .lifestyle-card {
+            background: var(--gris-carbon);
+            border: 1px solid var(--gris-oscuro);
+            overflow: hidden;
+            position: relative;
+            height: 500px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lifestyle-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--plateado);
+            box-shadow: 0 20px 40px rgba(192, 192, 192, 0.3);
+        }
+
+        .lifestyle-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .lifestyle-card:hover .lifestyle-img {
+            transform: scale(1.1);
+        }
+
+        .lifestyle-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(10, 10, 10, 0.95), transparent);
+            padding: 40px;
+            transform: translateY(50%);
+            transition: transform 0.3s;
+        }
+
+        .lifestyle-card:hover .lifestyle-overlay {
+            transform: translateY(0);
+        }
+
+        .lifestyle-title {
+            font-size: 32px;
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+            color: var(--plateado-brillante);
+        }
+
+        .lifestyle-description {
+            font-size: 16px;
+            line-height: 1.6;
+
+            color: var(--plateado);
+        }
+
+        /* Sección Productos */
+        .productos-section {
+            padding: 100px 0;
+            background: var(--negro-profundo);
+            position: relative;
+        }
+
+        .productos-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--plateado), transparent);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 72px;
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 10px;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--plateado), var(--plateado-brillante));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 24px;
+            color: var(--plateado);
+            margin-bottom: 60px;
+            letter-spacing: 3px;
+        }
+
+        .productos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .producto-card {
+            background: var(--gris-carbon);
+            border: 1px solid var(--gris-oscuro);
+            overflow: hidden;
+            position: relative;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .producto-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent 40%, rgba(192, 192, 192, 0.1) 50%, transparent 60%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .producto-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--plateado);
+            box-shadow: 0 20px 40px rgba(192, 192, 192, 0.2);
+        }
+
+        .producto-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .producto-img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .producto-card:hover .producto-img {
+            transform: scale(1.1);
+        }
+
+        .producto-info {
+            padding: 30px;
+            background: rgba(26, 26, 26, 0.9);
+        }
+
+        .producto-nombre {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+
+        .producto-categoria {
+            font-size: 14px;
+            color: var(--plateado);
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .producto-precio {
+            font-size: 28px;
+            color: var(--plateado-brillante);
+            font-family: 'Bebas Neue', cursive;
+        }
+
+        /* Filtros */
+        .filtros-container {
+            max-width: 1400px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filtro-btn {
+            padding: 15px 30px;
+            background: transparent;
+            border: 2px solid var(--gris-oscuro);
+            color: var(--plateado);
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .filtro-btn.active,
+        .filtro-btn:hover {
+            border-color: var(--plateado);
+            color: var(--plateado-brillante);
+            box-shadow: 0 0 20px rgba(192, 192, 192, 0.3);
+        }
+
+        /* Sección Tribu */
+        .tribu-section {
+            padding: 100px 0;
+            background: url('https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=1920') center/cover fixed;
+            position: relative;
+        }
+
+        .tribu-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(10, 10, 10, 0.85);
+        }
+
+        .tribu-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tribu-text {
+            font-size: 20px;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            color: var(--plateado);
+        }
+
+        .tribu-highlight {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--plateado-brillante);
+            margin: 40px 0;
+            letter-spacing: 3px;
+            text-shadow: 0 0 30px rgba(192, 192, 192, 0.5);
+        }
+
+        .valores-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .valor-card {
+            padding: 40px;
+            background: rgba(42, 42, 42, 0.8);
+            border: 1px solid var(--plateado);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .valor-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--plateado), transparent, var(--plateado));
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+        }
+
+        .valor-card:hover::before {
+            opacity: 1;
+            animation: borderRotate 2s linear infinite;
+        }
+
+        @keyframes borderRotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .valor-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .valor-titulo {
+            font-size: 28px;
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+        }
+
+        /* Sección Versatilidad */
+        .versatilidad-section {
+            padding: 100px 0;
+            background: var(--gris-carbon);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .versatilidad-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .versatilidad-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 0;
+            margin-top: 60px;
+        }
+
+        .versatilidad-item {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .versatilidad-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .versatilidad-item:hover .versatilidad-img {
+            transform: scale(1.2);
+        }
+
+        .versatilidad-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 40px;
+            background: linear-gradient(to top, rgba(10, 10, 10, 0.9), transparent);
+            transform: translateY(50%);
+            transition: transform 0.3s;
+        }
+
+        .versatilidad-item:hover .versatilidad-info {
+            transform: translateY(0);
+        }
+
+        .versatilidad-titulo {
+            font-size: 32px;
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 3px;
+            color: var(--plateado-brillante);
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        .versatilidad-desc {
+            font-size: 16px;
+            color: var(--plateado);
+            line-height: 1.6;
+        }
+
+        /* Carrito */
+        .carrito-sidebar {
+            position: fixed;
+            right: -400px;
+            top: 0;
+            width: 400px;
+            height: 100vh;
+            background: var(--gris-carbon);
+            border-left: 2px solid var(--plateado);
+            z-index: 2000;
+            transition: right 0.3s;
+            overflow-y: auto;
+        }
+
+        .carrito-sidebar.active {
+            right: 0;
+        }
+
+        .carrito-header {
+            padding: 30px;
+            background: var(--negro-profundo);
+            border-bottom: 1px solid var(--gris-oscuro);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .carrito-titulo {
+            font-size: 28px;
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 3px;
+        }
+
+        .cerrar-carrito {
+            font-size: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cerrar-carrito:hover {
+            color: var(--plateado-brillante);
+            transform: rotate(90deg);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 60px 0 30px;
+            background: var(--negro-profundo);
+            border-top: 2px solid var(--plateado);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-columna h3 {
+            font-size: 24px;
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            color: var(--plateado-brillante);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 15px;
+        }
+
+        .footer-links a {
+            color: var(--plateado);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--plateado-brillante);
+            padding-left: 10px;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border: 2px solid var(--plateado);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: var(--plateado);
+            text-decoration: none;
+            transition: all 0.3s;
+            clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+        }
+
+        .social-icon:hover {
+            background: var(--plateado);
+            color: var(--negro-profundo);
+            transform: translateY(-5px);
+        }
+
+        /* Animaciones de scroll */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
+        }
+
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Modal de producto */
+        .producto-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            max-width: 1200px;
+            width: 90%;
+            background: var(--gris-carbon);
+            border: 2px solid var(--plateado);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            position: relative;
+        }
+
+        .modal-imagen {
+            width: 100%;
+            height: 600px;
+            object-fit: cover;
+        }
+
+        .modal-info {
+            padding: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 40px;
+            color: var(--plateado);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--plateado-brillante);
+            transform: rotate(90deg);
+        }
+
+        /* Loading animation */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--negro-profundo);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+        }
+
+        .loader-logo {
+            font-size: 100px;
+            font-family: 'Bebas Neue', cursive;
+            letter-spacing: 15px;
+            color: var(--plateado);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .mobile-menu-toggle span {
+            width: 30px;
+            height: 3px;
+            background: var(--plateado);
+            transition: all 0.3s;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 80px;
+                flex-direction: column;
+                background: var(--gris-carbon);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                padding: 40px 0;
+                border-bottom: 2px solid var(--plateado);
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .hero-logo {
+                font-size: 80px;
+                letter-spacing: 10px;
+            }
+
+            .hero-slogan {
+                font-size: 24px;
+            }
+
+            .hero-subslogan {
+                font-size: 16px;
+            }
+
+            .lifestyle-badges {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .cta-button {
+                padding: 15px 30px;
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 48px;
+            }
+
+            .lifestyle-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-imagen {
+                height: 400px;
+            }
+
+            .carrito-sidebar {
+                width: 100%;
+                right: -100%;
+            }
+
+            .versatilidad-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+
+        /* Indicador de scroll */
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--plateado), var(--plateado-brillante));
+            transition: width 0.3s;
+            z-index: 10000;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-logo">EGOZN</div>
+    </div>
+
+    <!-- Parallax Background -->
+    <div class="parallax-bg"></div>
+
+    <!-- Indicador de progreso de scroll -->
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div>
+                <img id="logoTest" style="height: 3rem; opacity: 1; width: auto;" src="Img/EGOZN.png" alt="EGOZN Logo">
+            </div>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#home">INICIO</a></li>
+                <li><a href="#lifestyle">ESTILO DE VIDA</a></li>
+                <li><a href="#productos">TIENDA</a></li>
+                <li><a href="#tribu">TRIBU EGOZN</a></li>
+                <li><a href="#" onclick="toggleCarrito()">CARRITO <span id="carrito-count">(0)</span></a></li>
+            </ul>
+            <div class="mobile-menu-toggle" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1 class="hero-logo">EGOZN</h1>
+            <p class="hero-slogan">NO ES UNA MARCA, ES UN ESTILO DE VIDA</p>
+            <p class="hero-subslogan">
+                Entrena intenso, vive elegante<br>
+                <span style="font-size: 0.85em; opacity: 0.9;">Una prenda que evoluciona contigo</span>
+            </p>
+            <div class="cta-container">
+                <a href="#productos" class="cta-button">DESCUBRE TU ESTILO</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lifestyle Section -->
+    <section class="lifestyle-section" id="lifestyle">
+        <h2 class="section-title scroll-reveal">TU ESTILO, TU VIDA</h2>
+        <p class="section-subtitle scroll-reveal">
+            Una sola prenda, infinitas posibilidades. EGOZN se adapta a cada momento de tu día
+        </p>
+
+        <div class="lifestyle-grid">
+            <div class="lifestyle-card scroll-reveal">
+                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=800" alt="Gym Life"
+                    class="lifestyle-img">
+                <div class="lifestyle-overlay">
+                    <h3 class="lifestyle-title">DOMINA EL GYM</h3>
+                    <p class="lifestyle-description">
+                        Tejidos técnicos que se mueven contigo. Diseños que inspiran fuerza.
+                        Tu mejor versión en cada repetición.
+                    </p>
+                </div>
+            </div>
+
+            <div class="lifestyle-card scroll-reveal">
+                <img src="https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800" alt="Night Life"
+                    class="lifestyle-img">
+                <div class="lifestyle-overlay">
+                    <h3 class="lifestyle-title">CONQUISTA LA NOCHE</h3>
+                    <p class="lifestyle-description">
+                        Del after work a la discoteca. Estilo urbano que marca tendencia.
+                        Sé el centro de atención sin esfuerzo.
+                    </p>
+                </div>
+            </div>
+
+            <div class="lifestyle-card scroll-reveal">
+                <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=800" alt="Daily Life"
+                    class="lifestyle-img">
+                <div class="lifestyle-overlay">
+                    <h3 class="lifestyle-title">VIVE EL DÍA A DÍA</h3>
+                    <p class="lifestyle-description">
+                        Comodidad sin sacrificar estilo. Desde la oficina hasta el café con amigos.
+                        Tu uniforme de vida moderna.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Productos Section -->
+    <section class="productos-section" id="productos">
+        <h2 class="section-title scroll-reveal">COLECCIÓN LIFESTYLE</h2>
+        <p class="section-subtitle scroll-reveal">
+            Prendas diseñadas para adaptarse a tu vida, no al revés
+        </p>
+
+        <div class="filtros-container scroll-reveal">
+            <button class="filtro-btn active" onclick="filtrarProductos('todos')">TODOS</button>
+            <button class="filtro-btn" onclick="filtrarProductos('gym')">GYM & SPORT</button>
+            <button class="filtro-btn" onclick="filtrarProductos('casual')">CASUAL DAILY</button>
+            <button class="filtro-btn" onclick="filtrarProductos('night')">NIGHT OUT</button>
+            <button class="filtro-btn" onclick="filtrarProductos('nuevo')">NUEVA COLECCIÓN</button>
+        </div>
+
+        <div class="productos-grid">
+            <!-- Producto 1 -->
+            <div class="producto-card scroll-reveal" data-categoria="gym casual nuevo">
+                <img src="https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800" alt="Tech Flex Shirt"
+                    class="producto-img">
+                <div class="producto-info">
+                    <p class="producto-categoria">GYM • CASUAL • NIGHT</p>
+                    <h3 class="producto-nombre">TECH FLEX SHIRT</h3>
+                    <p class="producto-precio">€69.99</p>
+                </div>
+            </div>
+
+            <!-- Producto 2 -->
+            <div class="producto-card scroll-reveal" data-categoria="gym casual">
+                <img src="https://images.unsplash.com/photo-1606902965551-dce093cda6e7?w=800" alt="Hybrid Shorts"
+                    class="producto-img">
+                <div class="producto-info">
+                    <p class="producto-categoria">GYM • CASUAL</p>
+                    <h3 class="producto-nombre">HYBRID PERFORMANCE SHORTS</h3>
+                    <p class="producto-precio">€59.99</p>
+                </div>
+            </div>
+
+            <!-- Producto 3 -->
+            <div class="producto-card scroll-reveal" data-categoria="gym casual night nuevo">
+                <img src="https://images.unsplash.com/photo-1592632789004-57d4354f2499?w=800" alt="Adapt Leggings"
+                    class="producto-img">
+                <div class="producto-info">
+                    <p class="producto-categoria">GYM • CASUAL • NIGHT</p>
+                    <h3 class="producto-nombre">ADAPT LIFESTYLE LEGGINGS</h3>
+                    <p class="producto-precio">€79.99</p>
+                </div>
+            </div>
+
+            <!-- Producto 4 -->
+            <div class="producto-card scroll-reveal" data-categoria="casual night">
+                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800" alt="Urban Hoodie"
+                    class="producto-img">
+                <div class="producto-info">
+                    <p class="producto-categoria">CASUAL • NIGHT</p>
+                    <h3 class="producto-nombre">URBAN TECH HOODIE</h3>
+                    <p class="producto-precio">€99.99</p>
+                </div>
+            </div>
+
+            <!-- Producto 5 -->
+            <div class="producto-card scroll-reveal" data-categoria="gym">
+                <img src="https://images.unsplash.com/photo-1594736797933-d0501ba2fe65?w=800" alt="Power Bra"
+                    class="producto-img">
+                <div class="producto-info">
+                    <p class="producto-categoria">GYM • CASUAL</p>
+                    <h3 class="producto-nombre">POWER SUPPORT BRA</h3>
+                    <p class="producto-precio">€54.99</p>
+                </div>
+            </div>
+
+            <!-- Producto 6 -->
+            <div class="producto-card scroll-reveal" data-categoria="casual night nuevo">
+                <img src="https://images.unsplash.com/photo-1578681994506-b8f463449011?w=800" alt="Lifestyle Joggers"
+                    class="producto-img">
+                <div class="producto-info">
+                    <p class="producto-categoria">CASUAL • NIGHT</p>
+                    <h3 class="producto-nombre">LIFESTYLE JOGGERS</h3>
+                    <p class="producto-precio">€89.99</p>
+                </div>
+            </div>
+
+            <!-- Producto 7 -->
+            <div class="producto-card scroll-reveal" data-categoria="night nuevo">
+                <img src="https://images.unsplash.com/photo-1523381140794-a1eef18a37c7?w=800" alt="Night Polo"
+                    class="producto-img">
+                <div class="producto-info">
+                    <p class="producto-categoria">CASUAL • NIGHT</p>
+                    <h3 class="producto-nombre">NIGHT TECH POLO</h3>
+                    <p class="producto-precio">€74.99</p>
+                </div>
+            </div>
+
+            <!-- Producto 8 -->
+            <div class="producto-card scroll-reveal" data-categoria="gym casual">
+                <img src="https://images.unsplash.com/photo-1518459031867-a89b944bffe4?w=800" alt="Flex Tank"
+                    class="producto-img">
+                <div class="producto-info">
+                    <p class="producto-categoria">GYM • CASUAL</p>
+                    <h3 class="producto-nombre">FLEX LIFESTYLE TANK</h3>
+                    <p class="producto-precio">€44.99</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tribu Section -->
+    <section class="tribu-section" id="tribu">
+        <div class="tribu-content">
+            <h2 class="section-title scroll-reveal">LA TRIBU EGOZN</h2>
+            <p class="tribu-text scroll-reveal">
+                EGOZN no es solo lo que vistes, es cómo vives. Somos una comunidad de personas
+                que entienden que la vida no tiene pausas, que cada momento cuenta y que el estilo
+                debe fluir con nosotros, no limitarnos.
+            </p>
+            <p class="tribu-highlight scroll-reveal">
+                "No cambies de ropa, cambia de actitud"
+            </p>
+            <p class="tribu-text scroll-reveal">
+                Desde el sudor del gimnasio hasta las luces de la ciudad, desde las reuniones de trabajo hasta las
+                noches de celebración. EGOZN se mueve contigo,
+                se adapta a tu ritmo, celebra tu versatilidad. Porque entendemos que la vida
+                moderna no se detiene, y tu estilo tampoco debería hacerlo.
+            </p>
+        </div>
+    </section>
+
+    <!-- Carrito Sidebar -->
+    <div class="carrito-sidebar" id="carritoSidebar">
+        <div class="carrito-header">
+            <h3 class="carrito-titulo">TU SELECCIÓN</h3>
+            <span class="cerrar-carrito" onclick="toggleCarrito()">×</span>
+        </div>
+        <div id="carrito-items">
+            <!-- Items del carrito se agregarán dinámicamente -->
+        </div>
+        <div style="padding: 30px;">
+            <div class="orden-total"
+                style="margin-bottom: 60px; font-size: 28px; font-family: 'Bebas Neue', cursive; letter-spacing: 3px; border-top: 2px solid var(--plateado); padding-top: 20px;">
+                TOTAL: €<span id="carrito-total">0.00</span>
+            </div>
+            <a href="#checkout" class="cta-button" style="width: 100%; text-align: center;">
+                COMPLETAR PEDIDO
+            </a>
+        </div>
+    </div>
+
+    <!-- Modal Producto -->
+    <div class="producto-modal" id="productoModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="cerrarModal()">×</span>
+            <img src="" alt="" class="modal-imagen" id="modalImagen">
+            <div class="modal-info">
+                <h2 id="modalNombre" style="font-size: 36px; margin-bottom: 20px;"></h2>
+                <p id="modalCategoria"
+                    style="font-size: 16px; color: var(--plateado); margin-bottom: 20px; letter-spacing: 2px;"></p>
+                <p id="modalPrecio" style="font-size: 32px; color: var(--plateado-brillante); margin-bottom: 30px;"></p>
+                <p style="margin-bottom: 30px; line-height: 1.8;">
+                    Diseñado para moverte sin límites. Esta pieza versátil se adapta a cada momento
+                    de tu día, combinando tecnología avanzada con estilo urbano contempor áneo. Desde entrenamientos
+                    intensos hasta salidas nocturnas, EGOZN está contigo.
+                </p>
+                <div style="margin-bottom: 30px;">
+                    <h4 style="margin-bottom: 15px;">CARACTERÍSTICAS LIFESTYLE:</h4>
+                    <ul style="list-style: none;">
+                        <li>✓ Tejido técnico que respira y se mueve contigo</li>
+                        <li>✓ Diseño versátil gym-to-street</li>
+                        <li>✓ Tecnología anti-olor y secado rápido</li>
+                        <li>✓ Corte moderno que favorece tu silueta</li>
+                        <li>✓ Resistente para tu ritmo de vida</li>
+                    </ul>
+                </div>
+                <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+                    <select
+                        style="flex: 1; padding: 15px; background: var(--negro-profundo); border: 1px solid var(--plateado); color: var(--plateado);">
+                        <option>TALLA S</option>
+                        <option>TALLA M</option>
+                        <option>TALLA L</option>
+                        <option>TALLA XL</option>
+                        <option>TALLA XXL</option>
+                    </select>
+                    <input type="number" value="1" min="1"
+                        style="width: 80px; padding: 15px; background: var(--negro-profundo); border: 1px solid var(--plateado); color: var(--plateado); text-align: center;">
+                </div>
+                <button class="cta-button" style="width: 100%;" onclick="agregarAlCarrito()">
+                    AÑADIR A MI ESTILO
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-columna">
+                <h3>EGOZN LIFESTYLE</h3>
+                <p style="margin: 20px 0; line-height: 1.8;">
+                    No es una marca, es tu estilo de vida. Únete a miles que viven
+                    sin límites, sin cambios de ropa innecesarios, con estilo 24/7.
+                </p>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"></a>
+                    <a href="#" class="social-icon"></a>
+                    <a href="#" class="social-icon"></a>
+                    <a href="#" class="social-icon"></a>
+                </div>
+            </div>
+            <div class="footer-columna">
+                <h3>EXPLORA</h3>
+                <ul class="footer-links">
+                    <li><a href="#productos">Colección Lifestyle</a></li>
+                    <li><a href="#gym">Línea Gym</a></li>
+                    <li><a href="#casual">Daily Essentials</a></li>
+                    <li><a href="#night">Night Collection</a></li>
+                </ul>
+            </div>
+            <div class="footer-columna">
+                <h3>EXPERIENCIA EGOZN</h3>
+                <ul class="footer-links">
+                    <li><a href="#envios">Envíos Express</a></li>
+                    <li><a href="#cambios">Cambios Flexibles</a></li>
+                    <li><a href="#tallas">Guía de Fit</a></li>
+                    <li><a href="#cuidados">Cuidado Fácil</a></li>
+                    <li><a href="#faq">Preguntas Frecuentes</a></li>
+                </ul>
+            </div>
+            <div class="footer-columna">
+                <h3>VIVE EL LIFESTYLE</h3>
+                <p style="margin: 20px 0;">
+                    Recibe inspiración, nuev as colecciones y tips de estilo versátil directamente en tu inbox.
+                </p>
+                <form style="margin-top: 20px;">
+                    <input type="email" placeholder="tu@email.com"
+                        style="width: 100%; padding: 15px; background: var(--negro-profundo); border: 1px solid var(--plateado); color: var(--plateado); margin-bottom: 15px;">
+                    <button type="submit" class="cta-button" style="width: 100%; font-size: 16px;">
+                        UNIRSE AL LIFESTYLE
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 40px; padding-top: 40px; border-top: 1px solid var(--gris-oscuro);">
+            <p>&copy; 2025 EGOZN. No es una marca, es un estilo de vida. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('loader').style.display = 'none';
+            }, 2000);
+        });
+
+        // Mobile Menu
+        function toggleMenu() {
+            const navMenu = document.getElementById('navMenu');
+            navMenu.classList.toggle('active');
+        }
+
+        // Carrito
+        let carrito = [];
+
+        function toggleCarrito() {
+            const carritoSidebar = document.getElementById('carritoSidebar');
+            carritoSidebar.classList.toggle('active');
+        }
+
+        function agregarAlCarrito() {
+            // Simular agregar producto
+            const producto = {
+                nombre: document.getElementById('modalNombre').textContent,
+                categoria: document.getElementById('modalCategoria').textContent,
+                precio: parseFloat(document.getElementById('modalPrecio').textContent.replace('€', '')),
+                cantidad: 1
+            };
+
+            carrito.push(producto);
+            actualizarCarrito();
+            cerrarModal();
+            toggleCarrito();
+        }
+
+        function actualizarCarrito() {
+            const carritoCount = document.getElementById('carrito-count');
+            const carritoItems = document.getElementById('carrito-items');
+            const carritoTotal = document.getElementById('carrito-total');
+
+            carritoCount.textContent = `(${carrito.length})`;
+
+            let total = 0;
+            let html = '';
+
+            carrito.forEach((item, index) => {
+                total += item.precio * item.cantidad;
+                html += `
+                    <div style="padding: 20px; border-bottom: 1px solid var(--gris-oscuro);">
+                        <h4>${item.nombre}</h4>
+                        <p style="font-size: 14px; color: var(--plateado); margin: 5px 0;">${item.categoria}</p>
+                        <p>€${item.precio.toFixed(2)} x ${item.cantidad}</p>
+                        <button onclick="eliminarDelCarrito(${index})" style="margin-top: 10px; background: var(--rojo-tribal); border: none; color: white; padding: 5px 15px; cursor: pointer;">
+                            Eliminar
+                        </button>
+                    </div>
+                `;
+            });
+
+            carritoItems.innerHTML = html || '<p style="padding: 40px; text-align: center;">Tu selección está vacía</p>';
+            carritoTotal.textContent = total.toFixed(2);
+        }
+
+        function eliminarDelCarrito(index) {
+            carrito.splice(index, 1);
+            actualizarCarrito();
+        }
+
+        // Modal Producto
+        document.querySelectorAll('.producto-card').forEach(card => {
+            card.addEventListener('click', function () {
+                const img = this.querySelector('.producto-img');
+                const nombre = this.querySelector('.producto-nombre').textContent;
+                const categoria = this.querySelector('.producto-categoria').textContent;
+                const precio = this.querySelector('.producto-precio').textContent;
+
+                document.getElementById('modalImagen').src = img.src;
+                document.getElementById('modalNombre').textContent = nombre;
+                document.getElementById('modalCategoria').textContent = categoria;
+                document.getElementById('modalPrecio').textContent = precio;
+                document.getElementById('productoModal').style.display = 'flex';
+            });
+        });
+
+        function cerrarModal() {
+            document.getElementById('productoModal').style.display = 'none';
+        }
+
+        // Filtros
+        function filtrarProductos(categoria) {
+            const productos = document.querySelectorAll('.producto-card');
+            const botones = document.querySelectorAll('.filtro-btn');
+
+            botones.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            productos.forEach(producto => {
+                if (categoria === 'todos' || producto.dataset.categoria?.includes(categoria)) {
+                    producto.style.display = 'block';
+                } else {
+                    producto.style.display = 'none';
+                }
+            });
+        }
+
+        // Scroll Reveal Animation
+        const scrollReveal = () => {
+            const elements = document.querySelectorAll('.scroll-reveal');
+
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementBottom = element.getBoundingClientRect().bottom;
+
+                if (elementTop < window.innerHeight && elementBottom > 0) {
+                    element.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', scrollReveal);
+        scrollReveal();
+
+        // Parallax Effect
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.parallax-bg');
+            parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+        });
+
+        // Smooth Scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Sistema de notificaciones
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: -400px;
+                background: var(--gris-carbon);
+                border: 2px solid var(--plateado);
+                padding: 20px 30px;
+                color: var(--plateado-brillante);
+                font-size: 18px;
+                font-weight: 700;
+                letter-spacing: 2px;
+                z-index: 4000;
+                transition: right 0.5s ease-out;
+                box-shadow: 0 0 30px rgba(192, 192, 192, 0.5);
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.right = '20px';
+            }, 100);
+
+            setTimeout(() => {
+                notification.style.right = '-400px';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
+
+        // Mejorar la función de agregar al carrito con notificación
+        const originalAgregarAlCarrito = agregarAlCarrito;
+        agregarAlCarrito = function () {
+            originalAgregarAlCarrito();
+            showNotification('¡AÑADIDO A TU ESTILO!');
+        };
+
+        // Indicador de progreso de scroll
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollIndicator').style.width = scrolled + '%';
+        });
+
+        // Product Hover 3D Effect
+        document.querySelectorAll('.producto-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+            });
+
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) translateZ(0)';
+            });
+        });
+
+        // Guardar estado del carrito en localStorage
+        function guardarCarrito() {
+            localStorage.setItem('egoznCarrito', JSON.stringify(carrito));
+        }
+
+        function cargarCarrito() {
+            const carritoGuardado = localStorage.getItem('egoznCarrito');
+            if (carritoGuardado) {
+                carrito = JSON.parse(carritoGuardado);
+                actualizarCarrito();
+            }
+        }
+
+        cargarCarrito();
+
+        // Actualizar guardado cuando se modifica el carrito
+        const originalActualizarCarrito = actualizarCarrito;
+        actualizarCarrito = function () {
+            originalActualizarCarrito();
+            guardarCarrito();
+        };
+
+        // Animaciones de entrada para lifestyle badges
+        document.querySelectorAll('.lifestyle-badge').forEach((badge, index) => {
+            badge.style.animation = `fadeInUp 0.5s ease-out ${index * 0.1}s forwards`;
+            badge.style.opacity = '0';
+        });
+
+        // Easter Egg - Código Lifestyle
+        let lifestyleClicks = 0;
+        document.querySelector('.hero-slogan').addEventListener('click', () => {
+            lifestyleClicks++;
+            if (lifestyleClicks === 7) {
+                document.body.style.animation = 'epicMode 2s ease-in-out';
+                showNotification('¡MODO LIFESTYLE EXTREMO ACTIVADO!');
+                lifestyleClicks = 0;
+
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                }, 2000);
+            }
+        });
+
+        // Detección de tiempo del día para sugerencias
+        const hour = new Date().getHours();
+        let timeMessage = '';
+
+        if (hour >= 5 && hour < 10) {
+            timeMessage = '¡Buenos días! ¿Listo para el gym?';
+        } else if (hour >= 10 && hour < 17) {
+            timeMessage = 'Perfecto para tu día productivo';
+        } else if (hour >= 17 && hour < 21) {
+            timeMessage = 'Hora del after work con estilo';
+        } else {
+            timeMessage = '¡La noche es tuya!';
+        }
+
+        setTimeout(() => {
+            showNotification(timeMessage);
+        }, 3000);
+
+        // Inicialización completa
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('%cEGOZN LIFESTYLE', 'font-size: 50px; font-weight: bold; background: linear-gradient(45deg, #c0c0c0, #e8e8e8); -webkit-background-clip: text; -webkit            -text-fill-color: transparent;');
+            console.log('%cNo es una marca, es un estilo de vida', 'font-size: 20px; color: #c0c0c0;');
+        });
+
+        // Animación de texto cambiante con frases mejoradas
+        const lifestylePhrases = [
+            {
+                main: "Entrena intenso, vive elegante",
+                sub: "Una prenda que evoluciona contigo"
+            },
+            {
+                main: "Desde el amanecer hasta la madrugada",
+                sub: "Tu compañero perfecto en cada momento"
+            },
+            {
+                main: "Tecnología que respira, diseño que inspira",
+                sub: "Innovación al servicio de tu lifestyle"
+            },
+            {
+                main: "No cambies de ropa, cambia de actitud",
+                sub: "La versatilidad redefinida"
+            },
+            {
+                main: "Sudor, estilo, éxito",
+                sub: "Todo en una sola decisión"
+            },
+            {
+                main: "Rompe las reglas del vestuario",
+                sub: "Crea tu propia definición de estilo"
+            }
+        ];
+
+        let phraseIndex = 0;
+
+        function changeHeroPhrase() {
+            const subslogan = document.querySelector('.hero-subslogan');
+            if (subslogan) {
+                // Transición de salida más elegante
+                subslogan.style.transform = 'translateY(-30px) scale(0.95)';
+                subslogan.style.opacity = '0';
+                subslogan.style.filter = 'blur(5px)';
+
+                setTimeout(() => {
+                    phraseIndex = (phraseIndex + 1) % lifestylePhrases.length;
+                    const currentPhrase = lifestylePhrases[phraseIndex];
+                    subslogan.innerHTML = `${currentPhrase.main}<br><span style="font-size: 0.85em; opacity: 0.9;">${currentPhrase.sub}</span>`;
+
+                    // Transición de entrada más elegante
+                    subslogan.style.transform = 'translateY(30px) scale(1.05)';
+
+                    setTimeout(() => {
+                        subslogan.style.transform = 'translateY(0) scale(1)';
+                        subslogan.style.opacity = '1';
+                        subslogan.style.filter = 'blur(0px)';
+                    }, 100);
+                }, 600);
+            }
+        }
+
+        // Iniciar el ciclo con timing más pausado
+        setInterval(changeHeroPhrase, 6500);
+
+        // Efecto de respiración en los lifestyle badges
+        document.querySelectorAll('.lifestyle-badge').forEach((badge, index) => {
+            badge.style.animation = `breathe ${2 + index * 0.2}s ease-in-out infinite`;
+        });
+
+        // Tracking de interacciones
+        function trackEvent(category, action, label) {
+            console.log(`[EGOZN Analytics] ${category}: ${action} - ${label}`);
+        }
+
+        document.querySelectorAll('.lifestyle-card').forEach((card, index) => {
+            card.addEventListener('click', () => {
+                const title = card.querySelector('.lifestyle-title').textContent;
+                trackEvent('Lifestyle', 'view', title);
+            });
+        });
+
+        // Sistema de recomendaciones basado en hora del día
+        function recomendarProductos() {
+            const hour = new Date().getHours();
+            let recomendacion = '';
+
+            if (hour >= 5 && hour < 12) {
+                recomendacion = 'gym';
+                showNotification('🏋️ Mira nuestra colección GYM & SPORT');
+            } else if (hour >= 12 && hour < 18) {
+                recomendacion = 'casual';
+                showNotification('☀️ Descubre nuestros CASUAL DAILY essentials');
+            } else {
+                recomendacion = 'night';
+                showNotification('🌙 Explora la colección NIGHT OUT');
+            }
+
+            // Resaltar productos recomendados
+            document.querySelectorAll('.producto-card').forEach(card => {
+                if (card.dataset.categoria.includes(recomendacion)) {
+                    card.style.boxShadow = '0 0 20px rgba(192, 192, 192, 0.5)';
+                }
+            });
+        }
+
+        setTimeout(recomendarProductos, 5000);
+
+        // Mensaje de despedida personalizado
+        window.addEventListener('beforeunload', () => {
+            const messages = [
+                '¡Vive tu estilo!',
+                'EGOZN va contigo',
+                'Sin límites, sin cambios',
+                'Tu vida, tu ritmo, tu estilo'
+            ];
+            console.log(messages[Math.floor(Math.random() * messages.length)]);
+        });
+
+        // Animación especial para el logo en scroll
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const logo = document.querySelector('.logo');
+
+            if (scrollTop > lastScrollTop) {
+                // Scrolling down
+                logo.style.transform = 'scale(0.9)';
+            } else {
+                // Scrolling up
+                logo.style.transform = 'scale(1)';
+            }
+            lastScrollTop = scrollTop;
+        });
+
+        // Efecto de partículas en hover sobre CTA buttons
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('mouseenter', function (e) {
+                const rect = this.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                const ripple = document.createElement('span');
+                ripple.style.cssText = `
+                    position: absolute;
+                    background: var(--plateado);
+                    transform: translate(-50%, -50%);
+                    pointer-events: none;
+                    border-radius: 50%;
+                    animation: ripple 0.6s ease                    -out;
+                    left: ${x}px;
+                    top: ${y}px;
+                `;
+                this.style.position = 'relative';
+                this.style.overflow = 'hidden';
+                this.appendChild(ripple);
+
+                setTimeout(() => ripple.remove(), 600);
+            });
+        });
+
+        // Efecto de partículas metálicas
+        const createMetallicParticles = () => {
+            const particlesContainer = document.createElement('div');
+            particlesContainer.style.position = 'fixed';
+            particlesContainer.style.top = '0';
+            particlesContainer.style.left = '0';
+            particlesContainer.style.width = '100%';
+            particlesContainer.style.height = '100%';
+            particlesContainer.style.pointerEvents = 'none';
+            particlesContainer.style.zIndex = '1';
+            document.body.appendChild(particlesContainer);
+
+            setInterval(() => {
+                if (Math.random() > 0.8) {
+                    const particle = document.createElement('div');
+                    particle.style.position = 'absolute';
+                    particle.style.width = '2px';
+                    particle.style.height = '2px';
+                    particle.style.background = 'var(--plateado)';
+                    particle.style.left = Math.random() * window.innerWidth + 'px';
+                    particle.style.top = '-10px';
+                    particle.style.boxShadow = '0 0 10px var(--plateado)';
+                    particlesContainer.appendChild(particle);
+
+                    let posY = -10;
+                    const speed = 1 + Math.random() * 2;
+                    const drift = (Math.random() - 0.5) * 2;
+
+                    const fall = setInterval(() => {
+                        posY += speed;
+                        particle.style.top = posY + 'px';
+                        particle.style.left = parseFloat(particle.style.left) + drift + 'px';
+                        particle.style.opacity = 1 - (posY / window.innerHeight);
+
+                        if (posY > window.innerHeight) {
+                            clearInterval(fall);
+                            particle.remove();
+                        }
+                    }, 20);
+                }
+            }, 200);
+        };
+
+        if (window.innerWidth > 1024) {
+            createMetallicParticles();
+        }
+
+        // CSS para el efecto ripple
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                from {
+                    width: 0;
+                    height: 0;
+                    opacity: 1;
+                }
+                to {
+                    width: 100px;
+                    height: 100px;
+                    opacity: 0;
+                }
+            }
+            
+            @keyframes breathe {
+                0%, 100% {
+                    transform: scale(1);
+                    opacity: 0.8;
+                }
+                50% {
+                    transform: scale(1.05);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes epicMode {
+                0% {
+                    filter: hue-rotate(0deg) saturate(1);
+                }
+                50% {
+                    filter: hue-rotate(180deg) saturate(3);
+                }
+                100% {
+                    filter: hue-rotate(360deg) saturate(1);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Función para detectar si el usuario está en móvil
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+        if (isMobile) {
+            // Optimizaciones para móvil
+            document.querySelectorAll('.producto-card').forEach(card => {
+                card.addEventListener('touchstart', function () {
+                    this.style.transform = 'scale(0.98)';
+                });
+                card.addEventListener('touchend', function () {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        }
+
+        // Sistema de favoritos
+        let favoritos = JSON.parse(localStorage.getItem('egoznFavoritos')) || [];
+
+        function toggleFavorito(productoNombre) {
+            const index = favoritos.indexOf(productoNombre);
+            if (index === -1) {
+                favoritos.push(productoNombre);
+                showNotification('❤️ Añadido a favoritos');
+            } else {
+                favoritos.splice(index, 1);
+                showNotification('💔 Eliminado de favoritos');
+            }
+            localStorage.setItem('egoznFavoritos', JSON.stringify(favoritos));
+        }
+
+        // Contador de visitas
+        let visitas = parseInt(localStorage.getItem('egoznVisitas') || '0');
+        visitas++;
+        localStorage.setItem('egoznVisitas', visitas);
+
+        if (visitas === 1) {
+            setTimeout(() => {
+                showNotification('¡Bienvenido a EGOZN! 🎉');
+            }, 2000);
+        } else if (visitas % 5 === 0) {
+            setTimeout(() => {
+                showNotification(`¡Gracias por tu visita #${visitas}! 🙏`);
+            }, 2000);
+        }
+
+        // Modo oscuro automático según la hora
+        const checkDarkMode = () => {
+            const hour = new Date().getHours();
+            if (hour >= 20 || hour < 6) {
+                document.documentElement.style.setProperty('--negro-profundo', '#000000');
+                document.documentElement.style.setProperty('--gris-carbon', '#0a0a0a');
+            }
+        };
+        checkDarkMode();
+
+        // Efecto de carga progresiva de imágenes
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.style.opacity = '0';
+                    img.style.filter = 'blur(5px)';
+
+                    img.addEventListener('load', () => {
+                        img.style.transition = 'opacity 0.5s, filter 0.5s';
+                        img.style.opacity = '1';
+                        img.style.filter = 'blur(0)';
+                    });
+
+                    observer.unobserve(img);
+                }
+            });
+        });
+
+        document.querySelectorAll('img').forEach(img => {
+            // Excluir la imagen del logo del efecto de blur
+            if (img.id !== 'logoTest') {
+                imageObserver.observe(img);
+            }
+        });
+
+
+
+        // Finalización
+        console.log('EGOZN Lifestyle Store - Ready to adapt to your life! 🚀');
+
+
+    </script>
+</body>
+
+</html>
