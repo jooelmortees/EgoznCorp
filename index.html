@@ -97,13 +97,12 @@
             position: fixed;
             top: 0;
             width: 100%;
-            background: rgba(26, 26, 26, 0.98);
+            background: rgba(26, 26, 26, 0.95);
             backdrop-filter: blur(10px);
             z-index: 1000;
-            padding: 12px 0;
+            padding: 15px 0;
             border-bottom: 2px solid var(--plateado);
             animation: glowBorder 3s ease-in-out infinite;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
 
         @keyframes glowBorder {
@@ -125,18 +124,6 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 20px;
-            height: 60px;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            height: 100%;
-        }
-
-        .nav-logo img {
-            height: 40px;
-            width: auto;
         }
 
 
@@ -951,38 +938,15 @@
         .mobile-menu-toggle {
             display: none;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
             cursor: pointer;
-            padding: 8px;
-            border-radius: 4px;
-            transition: all 0.3s;
-            background: transparent;
-            border: 1px solid transparent;
-        }
-
-        .mobile-menu-toggle:hover {
-            background: rgba(192, 192, 192, 0.1);
-            border-color: var(--plateado);
         }
 
         .mobile-menu-toggle span {
-            width: 28px;
+            width: 30px;
             height: 3px;
             background: var(--plateado);
-            transition: all 0.3s ease;
-            border-radius: 2px;
-        }
-
-        .mobile-menu-toggle.active span:nth-child(1) {
-            transform: rotate(45deg) translate(8px, 8px);
-        }
-
-        .mobile-menu-toggle.active span:nth-child(2) {
-            opacity: 0;
-        }
-
-        .mobile-menu-toggle.active span:nth-child(3) {
-            transform: rotate(-45deg) translate(8px, -8px);
+            transition: all 0.3s;
         }
 
         /* ===== RESPONSIVE DESIGN ===== */
@@ -1142,53 +1106,19 @@
             .nav-menu {
                 position: fixed;
                 left: -100%;
-                top: 76px;
+                top: 80px;
                 flex-direction: column;
-                background: rgba(26, 26, 26, 0.98);
-                backdrop-filter: blur(15px);
+                background: var(--gris-carbon);
                 width: 100%;
                 text-align: center;
-                transition: left 0.3s ease;
-                padding: 30px 20px;
+                transition: 0.3s;
+                padding: 40px 20px;
                 border-bottom: 2px solid var(--plateado);
-                border-top: 1px solid rgba(192, 192, 192, 0.2);
-                z-index: 999;
-                box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-                gap: 0;
+                z-index: 1001;
             }
 
             .nav-menu.active {
                 left: 0;
-            }
-
-            .nav-menu li {
-                margin: 0;
-                padding: 0;
-                border-bottom: 1px solid rgba(192, 192, 192, 0.1);
-            }
-
-            .nav-menu li:last-child {
-                border-bottom: none;
-            }
-
-            .nav-menu a {
-                display: block;
-                padding: 18px 20px;
-                font-size: 16px;
-                letter-spacing: 1px;
-                transition: all 0.3s;
-                border-radius: 8px;
-                margin: 5px 0;
-            }
-
-            .nav-menu a:hover {
-                background: rgba(192, 192, 192, 0.1);
-                color: var(--plateado-brillante);
-                transform: translateX(10px);
-            }
-
-            .nav-menu a::after {
-                display: none;
             }
 
             .hero {
@@ -1517,22 +1447,7 @@
             }
 
             .nav-container {
-                padding: 0 12px;
-                height: 55px;
-            }
-
-            .nav-logo img {
-                height: 35px;
-            }
-
-            .nav-menu {
-                top: 67px;
-                padding: 25px 15px;
-            }
-
-            .nav-menu a {
-                padding: 15px 15px;
-                font-size: 15px;
+                padding: 0 8px;
             }
 
             .hero {
@@ -1724,17 +1639,9 @@
             }
 
             .mobile-menu-toggle {
-                min-width: 48px;
-                min-height: 48px;
-                padding: 10px;
-                background: rgba(192, 192, 192, 0.1);
-                border: 1px solid rgba(192, 192, 192, 0.3);
-                border-radius: 6px;
-            }
-
-            .mobile-menu-toggle:active {
-                background: rgba(192, 192, 192, 0.2);
-                transform: scale(0.95);
+                min-width: 44px;
+                min-height: 44px;
+                padding: 8px;
             }
 
             .cerrar-carrito,
@@ -1813,8 +1720,8 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-container">
-            <div class="nav-logo">
-                <img id="logoTest" src="Img/EGOZN.png" alt="EGOZN Logo">
+            <div>
+                <img id="logoTest" style="height: 3rem; opacity: 1; width: auto;" src="Img/EGOZN.png" alt="EGOZN Logo">
             </div>
             <ul class="nav-menu" id="navMenu">
                 <li><a href="#home">INICIO</a></li>
@@ -1823,7 +1730,7 @@
                 <li><a href="#tribu">TRIBU EGOZN</a></li>
                 <li><a href="#" onclick="toggleCarrito()">CARRITO <span id="carrito-count">(0)</span></a></li>
             </ul>
-            <div class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMenu()"></div>
+            <div class="mobile-menu-toggle" onclick="toggleMenu()">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -2151,13 +2058,9 @@
         // Mobile Menu con mejoras responsive
         function toggleMenu() {
             const navMenu = document.getElementById('navMenu');
-            const mobileToggle = document.getElementById('mobileMenuToggle');
             const body = document.body;
 
             navMenu.classList.toggle('active');
-            if (mobileToggle) {
-                mobileToggle.classList.toggle('active');
-            }
 
             // Prevenir scroll cuando el menú está abierto en móvil
             if (navMenu.classList.contains('active')) {
@@ -2171,13 +2074,8 @@
         document.querySelectorAll('.nav-menu a').forEach(link => {
             link.addEventListener('click', () => {
                 const navMenu = document.getElementById('navMenu');
-                const mobileToggle = document.getElementById('mobileMenuToggle');
                 if (navMenu.classList.contains('active')) {
-                    navMenu.classList.remove('active');
-                    if (mobileToggle) {
-                        mobileToggle.classList.remove('active');
-                    }
-                    document.body.style.overflow = '';
+                    toggleMenu();
                 }
             });
         });
@@ -2185,30 +2083,8 @@
         // Cerrar menú móvil al redimensionar ventana
         window.addEventListener('resize', () => {
             const navMenu = document.getElementById('navMenu');
-            const mobileToggle = document.getElementById('mobileMenuToggle');
             if (window.innerWidth > 767 && navMenu.classList.contains('active')) {
-                navMenu.classList.remove('active');
-                if (mobileToggle) {
-                    mobileToggle.classList.remove('active');
-                }
-                document.body.style.overflow = '';
-            }
-        });
-
-        // Cerrar menú al tocar fuera (solo en móvil)
-        document.addEventListener('click', (e) => {
-            const navMenu = document.getElementById('navMenu');
-            const mobileToggle = document.getElementById('mobileMenuToggle');
-            const navbar = document.querySelector('.navbar');
-            
-            if (window.innerWidth <= 767 && 
-                navMenu.classList.contains('active') && 
-                !navbar.contains(e.target)) {
-                navMenu.classList.remove('active');
-                if (mobileToggle) {
-                    mobileToggle.classList.remove('active');
-                }
-                document.body.style.overflow = '';
+                toggleMenu();
             }
         });
 
