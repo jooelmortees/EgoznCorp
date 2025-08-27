@@ -1846,6 +1846,18 @@
             transform: translateY(0);
         }
 
+        /* Auto-activación en móviles cuando llegan a la vista */
+        .lifestyle-card.auto-active .lifestyle-overlay {
+            transform: translateY(0);
+            transition: transform 0.6s ease-out;
+        }
+        
+        /* Animación más rápida para el plegado */
+        .lifestyle-card:not(.auto-active) .lifestyle-overlay {
+            transform: translateY(calc(85% - 60px));
+            transition: transform 0.6s ease-in;
+        }
+
         /* Improve button touch targets */
         @media (max-width: 767px) {
 
@@ -3202,6 +3214,46 @@
                 imageObserver.observe(img);
             }
         });
+
+        // Auto-desplegar lifestyle cards en móviles cuando llegan a la vista
+        if (window.innerWidth <= 767) {
+            const lifestyleObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const card = entry.target;
+                    
+                    if (entry.isIntersecting) {
+                        // Elemento entra en vista - desplegarlo
+                        setTimeout(() => {
+                            card.classList.add('auto-active');
+                        }, 300);
+                    } else {
+                        // Elemento sale de vista - plegarlo inmediatamente
+                        card.classList.remove('auto-active');
+                    }
+                });
+                
+                // Verificar si ningún lifestyle card está visible
+                const allCards = document.querySelectorAll('.lifestyle-card');
+                const visibleCards = Array.from(allCards).filter(card => 
+                    card.classList.contains('auto-active')
+                );
+                
+                // Si no hay tarjetas visibles, asegurar que todas estén plegadas
+                if (visibleCards.length === 0) {
+                    allCards.forEach(card => {
+                        card.classList.remove('auto-active');
+                    });
+                }
+            }, {
+                threshold: 0.7, // Se activa cuando el 70% del elemento es visible
+                rootMargin: '0px 0px -50px 0px' // Margen más pequeño para mejor control
+            });
+
+            // Observar todos los lifestyle cards
+            document.querySelectorAll('.lifestyle-card').forEach(card => {
+                lifestyleObserver.observe(card);
+            });
+        }
 
 
 
