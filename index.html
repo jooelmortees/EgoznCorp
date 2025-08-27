@@ -69,6 +69,18 @@
             /* Internet Explorer 10+ */
         }
 
+        /* Clase para bloquear scroll cuando modales están abiertos */
+        body.no-scroll {
+            overflow: hidden !important;
+            touch-action: none !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+        
+        /* Asegurar que html también esté bloqueado */
+        html.no-scroll {
+            overflow: hidden !important;
+        }
+
         /* Ocultar scrollbar en WebKit browsers (Chrome, Safari, Edge) */
         body::-webkit-scrollbar {
             display: none;
@@ -766,9 +778,19 @@
         }
 
         .cerrar-carrito {
-            font-size: 30px;
+            font-size: 50px;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
+            padding: 16px;
+            margin: -16px;
+            /* El padding aumenta el área clickeable, el margin negativo lo compensa visualmente */
+            z-index: 2;
+            background: none !important;
+            border: none !important;
+            outline: none !important;
+            box-shadow: none !important;
+            border-radius: 0 !important;
         }
 
         .cerrar-carrito:hover {
@@ -1215,6 +1237,35 @@
         /* Mobile Large (576px - 767px) */
         @media (max-width: 767px) {
 
+            /* Remover padding de secciones principales y aplicar márgenes a contenido */
+            .hero,
+            .lifestyle-section,
+            .productos-section,
+            .versatilidad-section,
+            .tribu-section,
+            .footer {
+                padding-left: 0;
+                padding-right: 0;
+                box-sizing: border-box;
+            }
+
+            /* Aplicar márgenes directamente a todo el contenido */
+            .hero > *,
+            .lifestyle-section > *,
+            .productos-section > *,
+            .versatilidad-section > *,
+            .tribu-section > *,
+            .footer > *,
+            .lifestyle-grid > *,
+            .productos-grid > *,
+            .versatilidad-grid > *,
+            .filtros-container > *,
+            .changing-text-container > * {
+                margin-left: 24px;
+                margin-right: 24px;
+                box-sizing: border-box;
+            }
+
             .mobile-menu-toggle {
                 display: flex;
             }
@@ -1224,7 +1275,7 @@
             }
 
             .nav-container {
-                padding: 0 15px;
+                padding: 0 24px;
             }
 
             .modal-close {
@@ -1338,7 +1389,7 @@
             .productos-grid {
                 grid-template-columns: repeat(2, 1fr);
                 gap: 15px;
-                padding: 0 10px;
+                padding: 0;
             }
 
             .producto-card {
@@ -1372,12 +1423,18 @@
             .lifestyle-grid {
                 grid-template-columns: 1fr;
                 gap: 25px;
-                padding: 0 10px;
+                padding: 0;
             }
 
             .lifestyle-title {
                 font-size: 28px;
                 letter-spacing: 2px;
+                margin-bottom: 20px;
+                margin-top: 0;
+            }
+
+            .lifestyle-description {
+                margin-top: 0;
             }
 
             .lifestyle-description {
@@ -1388,7 +1445,7 @@
             /* Versatilidad grid */
             .versatilidad-grid {
                 grid-template-columns: 1fr;
-                padding: 0 10px;
+                padding: 0;
             }
 
             .versatilidad-item {
@@ -1524,6 +1581,7 @@
             .productos-grid {
                 gap: 12px;
                 padding: 0 5px;
+                margin-top: 30px;
             }
 
             .producto-img {
@@ -1550,23 +1608,36 @@
             .versatilidad-titulo {
                 font-size: 26px;
                 letter-spacing: 1px;
+                margin-bottom: 20px;
+                margin-top: 0;
             }
 
             .lifestyle-description,
             .versatilidad-desc {
                 font-size: 14px;
+                margin-top: 0;
             }
 
             .filtros-container {
                 flex-direction: column;
                 gap: 10px;
-                padding: 0 10px;
+                padding: 0;
+                margin: 0 auto;
+                max-width: calc(100% - 56px);
+                width: 100%;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
             }
 
             .filtro-btn {
                 width: 100%;
+                max-width: 100%;
                 padding: 14px;
                 font-size: 14px;
+                text-align: center;
+                margin: 0;
+                box-sizing: border-box;
             }
 
             .versatilidad-item {
@@ -1666,11 +1737,14 @@
             .versatilidad-titulo {
                 font-size: 22px;
                 letter-spacing: 1px;
+                margin-bottom: 20px;
+                margin-top: 0;
             }
 
             .lifestyle-description,
             .versatilidad-desc {
                 font-size: 13px;
+                margin-top: 0;
             }
 
             .cta-button {
@@ -1730,7 +1804,13 @@
             }
 
             .lifestyle-overlay {
-                transform: translateY(60%);
+                transform: translateY(calc(100% - 80px));
+                padding-top: 40px;
+            }
+
+            .lifestyle-title {
+                margin-top: 0;
+                margin-bottom: 20px;
             }
 
             .versatilidad-info {
@@ -1794,9 +1874,9 @@
                 font-size: 35px;
                 top: 10px;
                 right: 10px;
-                background: rgba(10, 10, 10, 0.9);
-                border: 2px solid var(--plateado);
-                border-radius: 50%;
+                background: none !important;
+                border: none !important;
+                border-radius: 0 !important;
                 touch-action: manipulation;
             }
 
@@ -1957,14 +2037,18 @@
         </div>
 
         <div class="productos-grid">
-            <!-- Producto 1 -->
+            <!-- Producto 1 - CON OFERTA -->
             <div class="producto-card scroll-reveal" data-categoria="gym casual nuevo">
                 <img src="https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?w=800" alt="Tech Flex Shirt"
                     class="producto-img">
                 <div class="producto-info">
                     <p class="producto-categoria">GYM • CASUAL • NIGHT</p>
                     <h3 class="producto-nombre">TECH FLEX SHIRT</h3>
-                    <p class="producto-precio">€69.99</p>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="precio-original" style="text-decoration: line-through; color: var(--plateado); font-size: 14px;">€139.98</span>
+                        <span class="producto-precio" style="font-size: 18px; font-weight: 600;">€69.99</span>
+                        <span class="descuento" style="background: var(--rojo-tribal); color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">-50%</span>
+                    </div>
                 </div>
             </div>
 
@@ -1979,14 +2063,18 @@
                 </div>
             </div>
 
-            <!-- Producto 3 -->
+            <!-- Producto 3 - CON OFERTA -->
             <div class="producto-card scroll-reveal" data-categoria="gym casual night nuevo">
                 <img src="https://images.unsplash.com/photo-1592632789004-57d4354f2499?w=800" alt="Adapt Leggings"
                     class="producto-img">
                 <div class="producto-info">
                     <p class="producto-categoria">GYM • CASUAL • NIGHT</p>
                     <h3 class="producto-nombre">ADAPT LIFESTYLE LEGGINGS</h3>
-                    <p class="producto-precio">€79.99</p>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span class="precio-original" style="text-decoration: line-through; color: var(--plateado); font-size: 14px;">€99.99</span>
+                        <span class="producto-precio" style="font-size: 18px; font-weight: 600;">€79.99</span>
+                        <span class="descuento" style="background: var(--rojo-tribal); color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">-20%</span>
+                    </div>
                 </div>
             </div>
 
@@ -2072,32 +2160,69 @@
     <div class="carrito-sidebar" id="carritoSidebar">
         <div class="carrito-header">
             <h3 class="carrito-titulo">TU SELECCIÓN</h3>
-            <span class="cerrar-carrito" onclick="toggleCarrito()">×</span>
+            <span class="cerrar-carrito" onclick="toggleCarrito()" aria-label="Cerrar carrito" tabindex="0">×</span>
         </div>
         <div id="carrito-items">
             <!-- Items del carrito se agregarán dinámicamente -->
         </div>
         <div style="padding: 30px;">
-            <div class="orden-total"
-                style="margin-bottom: 60px; font-size: 28px; font-family: 'Bebas Neue', cursive; letter-spacing: 3px; border-top: 2px solid var(--plateado); padding-top: 20px;">
-                TOTAL: €<span id="carrito-total">0.00</span>
+            <!-- Resumen del pedido -->
+            <div style="border-top: 1px solid var(--gris-oscuro); padding-top: 20px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                    <span style="color: var(--plateado);">Subtotal</span>
+                    <span style="color: var(--plateado-brillante); font-weight: 600;">€ <span id="carrito-subtotal">0</span></span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <span style="color: var(--plateado);">Gastos de envío</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--plateado)" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="m9,12 l2,2 4,-4"/>
+                        </svg>
+                    </div>
+                    <span style="color: var(--plateado-brillante); font-weight: 600;">Gratis</span>
+                </div>
+                <div style="color: var(--plateado); font-size: 14px; margin-bottom: 16px;">Entrega en 2-4 días laborables</div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                    <span style="color: var(--plateado);">Impuestos y tasas</span>
+                    <span style="color: var(--plateado-brillante); font-weight: 600;">Incluido</span>
+                </div>
+                
+                <!-- Código promocional -->
+                <div style="margin-bottom: 20px;">
+                    <button style="background: none; border: none; color: var(--plateado); font-size: 14px; cursor: pointer; text-decoration: underline;">
+                        ¿Tiene un código promocional?
+                    </button>
+                </div>
+                
+                <!-- Total final -->
+                <div style="display: flex; justify-content: space-between; font-size: 20px; font-weight: 700; color: var(--plateado-brillante); border-top: 2px solid var(--plateado); padding-top: 16px; margin-bottom: 30px;">
+                    <span>TOTAL</span>
+                    <span>€ <span id="carrito-total">0</span></span>
+                </div>
             </div>
-            <a href="#checkout" class="cta-button" style="width: 100%; text-align: center;">
-                COMPLETAR PEDIDO
-            </a>
+            
+            <!-- Botón de pago -->
+            <button style="width: 100%; background: var(--negro-profundo); color: var(--plateado-brillante); border: 2px solid var(--plateado); padding: 16px; font-size: 16px; font-weight: 600; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s;">
+                Continuar con el pago
+            </button>
         </div>
     </div>
 
     <!-- Modal Producto -->
-    <div class="producto-modal" id="productoModal">
-        <div class="modal-content">
+    <div class="producto-modal" id="productoModal" onclick="cerrarModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
             <span class="modal-close" onclick="cerrarModal()">×</span>
             <img src="" alt="" class="modal-imagen" id="modalImagen">
             <div class="modal-info">
                 <h2 id="modalNombre" style="font-size: 36px; margin-bottom: 20px;"></h2>
                 <p id="modalCategoria"
                     style="font-size: 16px; color: var(--plateado); margin-bottom: 20px; letter-spacing: 2px;"></p>
-                <p id="modalPrecio" style="font-size: 32px; color: var(--plateado-brillante); margin-bottom: 30px;"></p>
+                <div style="margin-bottom: 30px;">
+                    <span id="modalPrecioOriginal" style="text-decoration: line-through; color: var(--plateado); font-size: 24px; margin-right: 10px; display: none;"></span>
+                    <span id="modalPrecio" style="font-size: 32px; color: var(--plateado-brillante);"></span>
+                    <span id="modalDescuento" style="background: var(--rojo-tribal); color: white; padding: 4px 8px; border-radius: 4px; font-size: 14px; margin-left: 10px; display: none;"></span>
+                </div>
                 <p style="margin-bottom: 30px; line-height: 1.8;">
                     Diseñado para moverte sin límites. Esta pieza versátil se adapta a cada momento
                     de tu día, combinando tecnología avanzada con estilo urbano contempor áneo. Desde entrenamientos
@@ -2264,31 +2389,72 @@
 
         // Carrito
         let carrito = [];
+        
+        // Variables para guardar posición del scroll
+        let scrollPosition = 0;
+
+        // Funciones auxiliares para manejar el scroll
+        function bloquearScroll() {
+            scrollPosition = window.pageYOffset;
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollPosition}px`;
+            document.body.style.width = '100%';
+            document.body.classList.add('no-scroll');
+            document.documentElement.classList.add('no-scroll');
+        }
+
+        function desbloquearScroll() {
+            document.body.classList.remove('no-scroll');
+            document.documentElement.classList.remove('no-scroll');
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            window.scrollTo(0, scrollPosition);
+        }
 
         function toggleCarrito() {
             const carritoSidebar = document.getElementById('carritoSidebar');
-            const body = document.body;
 
             carritoSidebar.classList.toggle('active');
 
             // Prevenir scroll cuando el carrito está abierto
             if (carritoSidebar.classList.contains('active')) {
-                body.style.overflow = 'hidden';
+                bloquearScroll();
             } else {
-                body.style.overflow = '';
+                desbloquearScroll();
             }
         }
 
         function agregarAlCarrito() {
             // Simular agregar producto
-            const producto = {
-                nombre: document.getElementById('modalNombre').textContent,
-                categoria: document.getElementById('modalCategoria').textContent,
-                precio: parseFloat(document.getElementById('modalPrecio').textContent.replace('€', '')),
-                cantidad: 1
-            };
+            const nombre = document.getElementById('modalNombre').textContent;
+            const categoria = document.getElementById('modalCategoria').textContent;
+            const precio = parseFloat(document.getElementById('modalPrecio').textContent.replace('€', ''));
+            const cantidadInput = document.querySelector('.modal-content input[type="number"]');
+            const cantidad = cantidadInput ? parseInt(cantidadInput.value) : 1;
+            
+            // Obtener talla y color seleccionados
+            const tallaSelect = document.querySelector('.modal-content select');
+            const talla = tallaSelect ? tallaSelect.value : 'S (EU)';
+            const color = 'Marrón'; // Por ahora fijo, se puede hacer dinámico
+            
+            // Obtener información de descuento si existe
+            const precioOriginalElement = document.getElementById('modalPrecioOriginal');
+            const descuentoElement = document.getElementById('modalDescuento');
+            const precioOriginal = precioOriginalElement ? parseFloat(precioOriginalElement.textContent.replace('€', '')) : null;
+            const descuento = descuentoElement ? parseInt(descuentoElement.textContent.replace('%', '').replace('-', '')) : null;
 
-            carrito.push(producto);
+            // Si ya existe el producto con la misma talla y color, suma la cantidad
+            let encontrado = false;
+            carrito.forEach(item => {
+                if (item.nombre === nombre && item.categoria === categoria && item.precio === precio && item.talla === talla && item.color === color) {
+                    item.cantidad += cantidad;
+                    encontrado = true;
+                }
+            });
+            if (!encontrado) {
+                carrito.push({ nombre, categoria, precio, cantidad, talla, color, precioOriginal, descuento });
+            }
             actualizarCarrito();
             cerrarModal();
             toggleCarrito();
@@ -2306,20 +2472,103 @@
 
             carrito.forEach((item, index) => {
                 total += item.precio * item.cantidad;
+                
+                // Usar los datos reales de descuento del producto
+                const tieneDescuento = item.precioOriginal && item.descuento;
+                const preciosHtml = tieneDescuento ? 
+                    `<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                        <span style="text-decoration: line-through; color: var(--plateado); font-size: 14px;">€ ${item.precioOriginal.toFixed(0)}</span>
+                        <span style="color: var(--plateado-brillante); font-size: 16px; font-weight: 600;">€ ${item.precio.toFixed(0)}</span>
+                        <span style="background: var(--rojo-tribal); color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">-${item.descuento}%</span>
+                    </div>` :
+                    `<div style="margin-bottom: 8px;">
+                        <span style="color: var(--plateado-brillante); font-size: 16px; font-weight: 600;">€ ${item.precio.toFixed(0)}</span>
+                    </div>`;
+                
                 html += `
-                    <div style="padding: 20px; border-bottom: 1px solid var(--gris-oscuro);">
-                        <h4>${item.nombre}</h4>
-                        <p style="font-size: 14px; color: var(--plateado); margin: 5px 0;">${item.categoria}</p>
-                        <p>€${item.precio.toFixed(2)} x ${item.cantidad}</p>
-                        <button onclick="eliminarDelCarrito(${index})" style="margin-top: 10px; background: var(--rojo-tribal); border: none; color: white; padding: 5px 15px; cursor: pointer;">
-                            Eliminar
-                        </button>
+                <div style="display: flex; padding: 20px; border-bottom: 1px solid var(--gris-oscuro); gap: 16px;">
+                    <!-- Imagen del producto -->
+                    <div style="flex-shrink: 0;">
+                        <img src="Img/EGOZN.png" alt="${item.nombre}" style="width: 80px; height: 100px; object-fit: cover; border-radius: 8px; background: var(--gris-carbon);">
                     </div>
+                    
+                    <!-- Información del producto -->
+                    <div style="flex: 1; display: flex; flex-direction: column;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                            <h4 style="font-size: 16px; font-weight: 600; color: var(--plateado-brillante); margin: 0;">${item.nombre.toUpperCase()}</h4>
+                        </div>
+                        
+                        <!-- Precios -->
+                        ${preciosHtml}
+                        
+                        <!-- Detalles -->
+                        <div style="margin-bottom: 12px;">
+                            <p style="font-size: 14px; color: var(--plateado); margin: 2px 0;">Color: ${item.color || 'Marrón'}</p>
+                            <p style="font-size: 14px; color: var(--plateado); margin: 2px 0;">Talla: ${item.talla || 'S (EU)'}</p>
+                        </div>
+                        
+                        <!-- Controles de cantidad -->
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                            <button onclick="restarCantidad(${index})" style="background: none; border: 1px solid var(--plateado); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--plateado); border-radius: 4px;">
+                                −
+                            </button>
+                            <span style="font-size: 16px; font-weight: 500; min-width: 20px; text-align: center;">${item.cantidad}</span>
+                            <button onclick="sumarCantidad(${index})" style="background: none; border: 1px solid var(--plateado); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--plateado); border-radius: 4px;">
+                                +
+                            </button>
+                            <div style="margin-left: auto; font-size: 18px; font-weight: 600; color: var(--plateado-brillante);">
+                                € ${(item.precio * item.cantidad).toFixed(0)}
+                            </div>
+                        </div>
+                        
+                        <!-- Acciones -->
+                        <div style="display: flex; gap: 16px; align-items: center;">
+                            <button title="Editar" style="background: none; border: none; color: var(--plateado); cursor: pointer; padding: 4px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                                </svg>
+                            </button>
+                            <button title="Favorito" style="background: none; border: none; color: var(--plateado); cursor: pointer; padding: 4px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                                </svg>
+                            </button>
+                            <button onclick="eliminarDelCarrito(${index})" title="Eliminar" style="background: none; border: none; color: var(--plateado); cursor: pointer; padding: 4px;">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3,6 5,6 21,6"/>
+                                    <path d="m19,6v14a2,2 0 0 1-2,2H7a2,2 0 0 1-2-2V6m3,0V4a2,2 0 0 1,2-2h4a2,2 0 0 1,2,2v2"/>
+                                    <line x1="10" y1="11" x2="10" y2="17"/>
+                                    <line x1="14" y1="11" x2="14" y2="17"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 `;
             });
 
             carritoItems.innerHTML = html || '<p style="padding: 40px; text-align: center;">Tu selección está vacía</p>';
-            carritoTotal.textContent = total.toFixed(2);
+            carritoTotal.textContent = total.toFixed(0);
+            
+            // Actualizar también el subtotal
+            const subtotalElement = document.getElementById('carrito-subtotal');
+            if (subtotalElement) {
+                subtotalElement.textContent = total.toFixed(0);
+            }
+        }
+
+        function restarCantidad(index) {
+            if (carrito[index].cantidad > 1) {
+                carrito[index].cantidad--;
+            } else {
+                carrito.splice(index, 1);
+            }
+            actualizarCarrito();
+        }
+
+        function sumarCantidad(index) {
+            carrito[index].cantidad++;
+            actualizarCarrito();
         }
 
         function eliminarDelCarrito(index) {
@@ -2334,12 +2583,32 @@
                 const nombre = this.querySelector('.producto-nombre').textContent;
                 const categoria = this.querySelector('.producto-categoria').textContent;
                 const precio = this.querySelector('.producto-precio').textContent;
+                
+                // Buscar si hay precio original y descuento
+                const precioOriginal = this.querySelector('.precio-original');
+                const descuento = this.querySelector('.descuento');
 
                 document.getElementById('modalImagen').src = img.src;
                 document.getElementById('modalNombre').textContent = nombre;
                 document.getElementById('modalCategoria').textContent = categoria;
                 document.getElementById('modalPrecio').textContent = precio;
-                document.getElementById('productoModal').style.display = 'flex';
+                
+                // Manejar descuentos
+                const modalPrecioOriginal = document.getElementById('modalPrecioOriginal');
+                const modalDescuento = document.getElementById('modalDescuento');
+                
+                if (precioOriginal && descuento) {
+                    modalPrecioOriginal.textContent = precioOriginal.textContent;
+                    modalPrecioOriginal.style.display = 'inline';
+                    modalDescuento.textContent = descuento.textContent;
+                    modalDescuento.style.display = 'inline';
+                } else {
+                    modalPrecioOriginal.style.display = 'none';
+                    modalDescuento.style.display = 'none';
+                }
+                
+                // Usar la función abrirModal que incluye el bloqueo de scroll
+                abrirModal(this);
             });
         });
 
@@ -2347,8 +2616,8 @@
             const modal = document.getElementById('productoModal');
             if (modal) {
                 modal.style.display = 'none';
-                // Restaurar scroll del body si estaba bloqueado
-                document.body.style.overflow = '';
+                // Restaurar scroll manteniendo posición
+                desbloquearScroll();
             }
         }
 
@@ -2357,10 +2626,8 @@
             const modal = document.getElementById('productoModal');
             if (modal) {
                 modal.style.display = 'flex';
-                // Bloquear scroll del body en móvil
-                if (window.innerWidth <= 767) {
-                    document.body.style.overflow = 'hidden';
-                }
+                // Bloquear scroll manteniendo posición
+                bloquearScroll();
             }
         }
 
@@ -2586,6 +2853,30 @@
                         cerrarModal();
                     }
                 });
+
+                // Prevenir scroll del body cuando se hace scroll en el modal
+                const modalContent = modal.querySelector('.modal-content');
+                if (modalContent) {
+                    modalContent.addEventListener('touchmove', function (e) {
+                        e.stopPropagation();
+                    });
+                }
+            }
+
+            // Prevenir scroll del body cuando se hace scroll en el carrito
+            const carritoSidebar = document.getElementById('carritoSidebar');
+            if (carritoSidebar) {
+                carritoSidebar.addEventListener('touchmove', function (e) {
+                    e.stopPropagation();
+                });
+
+                // También prevenir en el contenido específico del carrito
+                const carritoContenido = carritoSidebar.querySelector('.carrito-contenido');
+                if (carritoContenido) {
+                    carritoContenido.addEventListener('touchmove', function (e) {
+                        e.stopPropagation();
+                    });
+                }
             }
         });
 
