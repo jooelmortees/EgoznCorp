@@ -405,11 +405,18 @@
             background: linear-gradient(to top, rgba(10, 10, 10, 0.95), transparent);
             padding: 40px;
             transform: translateY(50%);
-            transition: transform 0.3s;
+            transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
 
         .lifestyle-card:hover .lifestyle-overlay {
             transform: translateY(0);
+        }
+
+        /* Solo aplicar auto-activación en dispositivos móviles */
+        @media (max-width: 767px) {
+            .lifestyle-card.auto-active .lifestyle-overlay {
+                transform: translateY(0);
+            }
         }
 
         .lifestyle-title {
@@ -1806,6 +1813,7 @@
             .lifestyle-overlay {
                 transform: translateY(calc(100% - 80px));
                 padding-top: 40px;
+                transition: transform 0.5s cubic-bezier(0.4, 0.0, 0.2, 1);
             }
 
             .lifestyle-title {
@@ -1844,18 +1852,6 @@
         .touch-device .lifestyle-card.touch-active .lifestyle-overlay,
         .touch-device .versatilidad-item.touch-active .versatilidad-info {
             transform: translateY(0);
-        }
-
-        /* Auto-activación en móviles cuando llegan a la vista */
-        .lifestyle-card.auto-active .lifestyle-overlay {
-            transform: translateY(0);
-            transition: transform 0.6s ease-out;
-        }
-        
-        /* Animación más rápida para el plegado */
-        .lifestyle-card:not(.auto-active) .lifestyle-overlay {
-            transform: translateY(calc(85% - 60px));
-            transition: transform 0.6s ease-in;
         }
 
         /* Improve button touch targets */
@@ -3215,38 +3211,28 @@
             }
         });
 
-        // Auto-desplegar lifestyle cards en móviles cuando llegan a la vista
-        if (window.innerWidth <= 767) {
+        // Auto-desplegar lifestyle cards solo en móviles cuando llegan a la vista
+        if (window.innerWidth <= 767 && 'ontouchstart' in window) {
             const lifestyleObserver = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     const card = entry.target;
-                    
                     if (entry.isIntersecting) {
-                        // Elemento entra en vista - desplegarlo
-                        setTimeout(() => {
-                            card.classList.add('auto-active');
-                        }, 300);
+                        // Primero quitar auto-active de todos los demás cards
+                        document.querySelectorAll('.lifestyle-card').forEach(otherCard => {
+                            if (otherCard !== card) {
+                                otherCard.classList.remove('auto-active');
+                            }
+                        });
+                        // Luego activar el card actual
+                        card.classList.add('auto-active');
                     } else {
-                        // Elemento sale de vista - plegarlo inmediatamente
+                        // Quitar auto-active cuando sale de vista
                         card.classList.remove('auto-active');
                     }
                 });
-                
-                // Verificar si ningún lifestyle card está visible
-                const allCards = document.querySelectorAll('.lifestyle-card');
-                const visibleCards = Array.from(allCards).filter(card => 
-                    card.classList.contains('auto-active')
-                );
-                
-                // Si no hay tarjetas visibles, asegurar que todas estén plegadas
-                if (visibleCards.length === 0) {
-                    allCards.forEach(card => {
-                        card.classList.remove('auto-active');
-                    });
-                }
             }, {
-                threshold: 0.7, // Se activa cuando el 70% del elemento es visible
-                rootMargin: '0px 0px -50px 0px' // Margen más pequeño para mejor control
+                threshold: 0.6, // Se activa cuando el 60% del elemento es visible
+                rootMargin: '-20px 0px -20px 0px' // Margen para mejor control
             });
 
             // Observar todos los lifestyle cards
