@@ -3995,6 +3995,7 @@
 
         // Funciones del modal de login y dropdown de usuario
         let isUserLoggedIn = false;
+        let cartLoadedForUser = null; // Evitar cargar carrito múltiples veces
 
         function toggleUserMenu() {
             if (!isUserLoggedIn) {
@@ -4200,9 +4201,9 @@
             try {
                 const { data: { user } } = await supabase.auth.getUser();
                 
-                if (user) {
+                if (user && cartLoadedForUser !== user.id) {
                     showUserInfo(user);
-                } else {
+                } else if (!user) {
                     hideUserInfo();
                 }
             } catch (error) {
@@ -4378,14 +4379,15 @@
                     const savedCart = localStorage.getItem(`egozn_cart_${userId}`);
                     if (savedCart) {
                         const cartFromStorage = JSON.parse(savedCart);
-                        if (carrito.length > 0) {
-                            const shouldSync = confirm('🛒 Encontramos un carrito guardado en tu cuenta.\n¿Deseas sincronizar con tu carrito actual?');
-                            if (shouldSync) {
-                                carrito = mergeCarritos(carrito, cartFromStorage);
-                            }
-                        } else {
+                        
+                        // SIMPLIFICADO: Solo cargar si el carrito local está vacío
+                        if (carrito.length === 0 && cartFromStorage.length > 0) {
                             carrito = cartFromStorage;
+                            console.log('✅ Carrito cargado desde localStorage:', carrito.length, 'items');
+                        } else if (carrito.length > 0) {
+                            console.log('ℹ️ Carrito local mantiene prioridad');
                         }
+                        
                         actualizarCarrito();
                     }
                     return;
@@ -4409,18 +4411,17 @@
                         image: item.image_url || 'Img/EGOZN.png'
                     }));
 
-                    // Combinar con carrito local si existe
-                    if (carrito.length > 0) {
-                        const shouldSync = confirm('🛒 Encontramos un carrito guardado en tu cuenta.\n¿Deseas sincronizar con tu carrito actual?');
-                        if (shouldSync) {
-                            carrito = mergeCarritos(carrito, cartFromDB);
-                        }
-                    } else {
+                    // SIMPLIFICADO: Solo cargar el carrito de BD si el local está vacío
+                    if (carrito.length === 0) {
                         carrito = cartFromDB;
+                        console.log('✅ Carrito cargado desde BD:', carrito.length, 'items');
+                    } else {
+                        console.log('ℹ️ Carrito local mantiene prioridad');
+                        // Guardar carrito local en BD para sincronizar
+                        await saveCartToDatabase();
                     }
 
                     actualizarCarrito();
-                    console.log('✅ Carrito cargado desde BD:', carrito.length, 'items');
                 } else {
                     // Si hay carrito local y no hay en BD, guardarlo
                     if (carrito.length > 0) {
@@ -4483,6 +4484,8 @@
 
         // Combinar dos carritos evitando duplicados
         function mergeCarritos(carritoLocal, carritoRemoto) {
+            console.log('🔄 Fusionando carritos - Local:', carritoLocal.length, 'Remoto:', carritoRemoto.length);
+            
             const merged = [...carritoLocal];
             
             carritoRemoto.forEach(itemRemoto => {
@@ -4497,21 +4500,27 @@
                 });
                 
                 if (existingIndex >= 0) {
-                    // Si existe, tomar la cantidad mayor
+                    // Si existe, sumar cantidades (no tomar el mayor)
                     const localQty = merged[existingIndex].quantity || merged[existingIndex].cantidad;
                     const remoteQty = itemRemoto.quantity || itemRemoto.cantidad;
                     
-                    if (merged[existingIndex].quantity) {
-                        merged[existingIndex].quantity = Math.max(localQty, remoteQty);
+                    if (merged[existingIndex].quantity !== undefined) {
+                        merged[existingIndex].quantity = localQty + remoteQty;
+                        merged[existingIndex].cantidad = localQty + remoteQty;
                     } else {
-                        merged[existingIndex].cantidad = Math.max(localQty, remoteQty);
+                        merged[existingIndex].cantidad = localQty + remoteQty;
+                        merged[existingIndex].quantity = localQty + remoteQty;
                     }
+                    
+                    console.log(`📦 Fusionado: ${localName} - Cantidad total: ${localQty + remoteQty}`);
                 } else {
                     // Si no existe, agregarlo
                     merged.push(itemRemoto);
+                    console.log(`➕ Agregado: ${itemRemoto.title || itemRemoto.nombre}`);
                 }
             });
             
+            console.log('✅ Fusión completada - Total items:', merged.length);
             return merged;
         }
 
@@ -4593,8 +4602,11 @@
             // Crear/actualizar perfil en la base de datos
             await createOrUpdateProfile(user);
             
-            // 🛒 CARGAR CARRITO SINCRONIZADO
-            await loadCartFromDatabase(user.id);
+            // 🛒 CARGAR CARRITO SINCRONIZADO (solo una vez por usuario)
+            if (cartLoadedForUser !== user.id) {
+                await loadCartFromDatabase(user.id);
+                cartLoadedForUser = user.id;
+            }
             
             console.log('👤 Usuario logueado:', user.email);
         }
@@ -4605,6 +4617,7 @@
             
             // Marcar como usuario deslogueado
             isUserLoggedIn = false;
+            cartLoadedForUser = null; // Resetear control de carga
             
             // Restaurar color original del icono
             profileIcon.style.color = '';
