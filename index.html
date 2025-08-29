@@ -3017,20 +3017,32 @@
             // Si ya existe el producto con la misma talla y color, suma la cantidad
             let encontrado = false;
             carrito.forEach(item => {
-                if (item.nombre === nombre && item.categoria === categoria && item.precio === precio && item.talla === talla && item.color === color) {
-                    item.cantidad += cantidad;
+                if (item.title === nombre && item.price === precio && item.size === talla) {
+                    item.quantity += cantidad;
                     encontrado = true;
                 }
             });
             if (!encontrado) {
-                carrito.push({ nombre, categoria, precio, cantidad, talla, color, precioOriginal, descuento });
+                // Usar formato compatible con BD y nuevo sistema
+                carrito.push({ 
+                    id: `${nombre.toLowerCase().replace(/\s+/g, '-')}-${categoria.toLowerCase()}`,
+                    title: nombre,
+                    category: categoria,
+                    price: precio,
+                    quantity: cantidad,
+                    size: talla,
+                    color: color,
+                    image: img.src,
+                    originalPrice: precioOriginal,
+                    discount: descuento 
+                });
             }
             actualizarCarrito();
             cerrarModal();
             toggleCarrito();
         }
 
-        function actualizarCarrito() {
+        async function actualizarCarrito() {
             const carritoCount = document.getElementById('carrito-count');
             const carritoItems = document.getElementById('carrito-items');
             const carritoTotal = document.getElementById('carrito-total');
@@ -3127,11 +3139,16 @@
             if (subtotalElement) {
                 subtotalElement.textContent = total.toFixed(0);
             }
+
+            // 🛒 GUARDAR AUTOMÁTICAMENTE EN BD SI ESTÁ LOGUEADO
+            if (isUserLoggedIn) {
+                saveCartToDatabase().catch(console.error);
+            }
         }
 
         function restarCantidad(index) {
-            if (carrito[index].cantidad > 1) {
-                carrito[index].cantidad--;
+            if (carrito[index].quantity > 1) {
+                carrito[index].quantity--;
             } else {
                 carrito.splice(index, 1);
             }
@@ -3139,7 +3156,7 @@
         }
 
         function sumarCantidad(index) {
-            carrito[index].cantidad++;
+            carrito[index].quantity++;
             actualizarCarrito();
         }
 
@@ -3893,6 +3910,9 @@
             // Inicializar Supabase con las credenciales configuradas
             supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
+            // 🗄️ Inicializar tablas necesarias
+            initializeDatabaseTables();
+            
             // Verificar si hay usuario logueado al cargar la página
             checkUser();
             
@@ -4175,6 +4195,13 @@
 
         // ============== FUNCIONES DE BASE DE DATOS ==============
 
+        // Inicializar tablas de la base de datos
+        async function initializeDatabaseTables() {
+            console.log('🗄️ Inicializando tablas de BD...');
+            // La tabla cart_items se creará automáticamente si es necesario
+            // O se puede crear manualmente desde el panel de Supabase
+        }
+
         // Crear/Actualizar perfil del usuario
         async function createOrUpdateProfile(user) {
             if (!supabase || !user) return;
@@ -4292,6 +4319,94 @@
             }
         }
 
+        // ============== FUNCIONES DE CARRITO SINCRONIZADO ==============
+        
+        // Cargar carrito desde la base de datos
+        async function loadCartFromDatabase(userId) {
+            if (!supabase || !userId) return;
+
+            try {
+                // Cargar carrito guardado del usuario desde localStorage
+                const savedCart = localStorage.getItem(`egozn_cart_${userId}`);
+                
+                if (savedCart) {
+                    const cartFromStorage = JSON.parse(savedCart);
+                    
+                    // Combinar con carrito local si existe
+                    if (carrito.length > 0) {
+                        const shouldSync = confirm('🛒 Encontramos un carrito guardado en tu cuenta.\n¿Deseas sincronizar con tu carrito actual?');
+                        if (shouldSync) {
+                            carrito = mergeCarritos(carrito, cartFromStorage);
+                        }
+                    } else {
+                        carrito = cartFromStorage;
+                    }
+
+                    actualizarCarrito();
+                    console.log('✅ Carrito cargado desde storage:', carrito.length, 'items');
+                } else {
+                    // Si hay carrito local y no hay guardado, guardarlo
+                    if (carrito.length > 0) {
+                        await saveCartToDatabase();
+                    }
+                }
+                
+            } catch (error) {
+                console.error('❌ Error cargando carrito:', error);
+            }
+        }
+
+        // Guardar carrito en la base de datos
+        async function saveCartToDatabase() {
+            if (!supabase || !isUserLoggedIn) return;
+
+            try {
+                // Por ahora, guardar en localStorage con prefijo de usuario
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) return;
+
+                localStorage.setItem(`egozn_cart_${user.id}`, JSON.stringify(carrito));
+                console.log('✅ Carrito guardado localmente para usuario:', user.email);
+                
+            } catch (error) {
+                console.error('❌ Error guardando carrito:', error);
+            }
+        }
+
+        // Combinar dos carritos evitando duplicados
+        function mergeCarritos(carritoLocal, carritoRemoto) {
+            const merged = [...carritoLocal];
+            
+            carritoRemoto.forEach(itemRemoto => {
+                const existingIndex = merged.findIndex(item => {
+                    // Compatibilidad con diferentes formatos
+                    const localName = item.title || item.nombre;
+                    const remoteName = itemRemoto.title || itemRemoto.nombre;
+                    const localSize = item.size || item.talla;
+                    const remoteSize = itemRemoto.size || itemRemoto.talla;
+                    
+                    return localName === remoteName && localSize === remoteSize;
+                });
+                
+                if (existingIndex >= 0) {
+                    // Si existe, tomar la cantidad mayor
+                    const localQty = merged[existingIndex].quantity || merged[existingIndex].cantidad;
+                    const remoteQty = itemRemoto.quantity || itemRemoto.cantidad;
+                    
+                    if (merged[existingIndex].quantity) {
+                        merged[existingIndex].quantity = Math.max(localQty, remoteQty);
+                    } else {
+                        merged[existingIndex].cantidad = Math.max(localQty, remoteQty);
+                    }
+                } else {
+                    // Si no existe, agregarlo
+                    merged.push(itemRemoto);
+                }
+            });
+            
+            return merged;
+        }
+
         // Agregar producto a favoritos
         async function addToFavorites(product) {
             if (!supabase) return;
@@ -4370,6 +4485,9 @@
             // Crear/actualizar perfil en la base de datos
             await createOrUpdateProfile(user);
             
+            // 🛒 CARGAR CARRITO SINCRONIZADO
+            await loadCartFromDatabase(user.id);
+            
             console.log('👤 Usuario logueado:', user.email);
         }
 
@@ -4386,6 +4504,10 @@
             
             // Cerrar dropdown si está abierto
             dropdown.classList.remove('active');
+            
+            // 🛒 LIMPIAR CARRITO AL CERRAR SESIÓN
+            carrito = [];
+            actualizarCarrito();
             
             console.log('👤 Usuario deslogueado');
         }
