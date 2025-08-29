@@ -3017,24 +3017,40 @@
             // Si ya existe el producto con la misma talla y color, suma la cantidad
             let encontrado = false;
             carrito.forEach(item => {
-                if (item.title === nombre && item.price === precio && item.size === talla) {
-                    item.quantity += cantidad;
+                // Compatibilidad con formato anterior y nuevo
+                const itemName = item.title || item.nombre;
+                const itemSize = item.size || item.talla;
+                const itemPrice = item.price || item.precio;
+                
+                if (itemName === nombre && itemPrice === precio && itemSize === talla) {
+                    if (item.quantity) {
+                        item.quantity += cantidad;
+                    } else {
+                        item.cantidad += cantidad;
+                    }
                     encontrado = true;
                 }
             });
             if (!encontrado) {
-                // Usar formato compatible con BD y nuevo sistema
+                // Usar formato unificado
                 carrito.push({ 
                     id: `${nombre.toLowerCase().replace(/\s+/g, '-')}-${categoria.toLowerCase()}`,
                     title: nombre,
+                    nombre: nombre, // Mantener compatibilidad
                     category: categoria,
+                    categoria: categoria, // Mantener compatibilidad
                     price: precio,
+                    precio: precio, // Mantener compatibilidad
                     quantity: cantidad,
+                    cantidad: cantidad, // Mantener compatibilidad
                     size: talla,
+                    talla: talla, // Mantener compatibilidad
                     color: color,
                     image: img.src,
                     originalPrice: precioOriginal,
-                    discount: descuento 
+                    precioOriginal: precioOriginal, // Mantener compatibilidad
+                    discount: descuento,
+                    descuento: descuento // Mantener compatibilidad
                 });
             }
             actualizarCarrito();
@@ -3055,31 +3071,40 @@
             let html = '';
 
             carrito.forEach((item, index) => {
-                total += item.precio * item.cantidad;
+                // Compatibilidad con formato anterior y nuevo
+                const precio = item.price || item.precio;
+                const cantidad = item.quantity || item.cantidad;
+                const nombre = item.title || item.nombre;
+                const categoria = item.category || item.categoria;
+                const talla = item.size || item.talla;
+                const precioOriginal = item.originalPrice || item.precioOriginal;
+                const descuento = item.discount || item.descuento;
+                
+                total += precio * cantidad;
                 
                 // Usar los datos reales de descuento del producto
-                const tieneDescuento = item.precioOriginal && item.descuento;
+                const tieneDescuento = precioOriginal && descuento;
                 const preciosHtml = tieneDescuento ? 
                     `<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                        <span style="text-decoration: line-through; color: var(--plateado); font-size: 14px;">€ ${item.precioOriginal.toFixed(0)}</span>
-                        <span style="color: var(--plateado-brillante); font-size: 16px; font-weight: 600;">€ ${item.precio.toFixed(0)}</span>
-                        <span style="background: var(--rojo-tribal); color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">-${item.descuento}%</span>
+                        <span style="text-decoration: line-through; color: var(--plateado); font-size: 14px;">€ ${precioOriginal.toFixed(0)}</span>
+                        <span style="color: var(--plateado-brillante); font-size: 16px; font-weight: 600;">€ ${precio.toFixed(0)}</span>
+                        <span style="background: var(--rojo-tribal); color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">-${descuento}%</span>
                     </div>` :
                     `<div style="margin-bottom: 8px;">
-                        <span style="color: var(--plateado-brillante); font-size: 16px; font-weight: 600;">€ ${item.precio.toFixed(0)}</span>
+                        <span style="color: var(--plateado-brillante); font-size: 16px; font-weight: 600;">€ ${precio.toFixed(0)}</span>
                     </div>`;
                 
                 html += `
                 <div style="display: flex; padding: 20px; border-bottom: 1px solid var(--gris-oscuro); gap: 16px;">
                     <!-- Imagen del producto -->
                     <div style="flex-shrink: 0;">
-                        <img src="Img/EGOZN.png" alt="${item.nombre}" style="width: 80px; height: 100px; object-fit: cover; border-radius: 8px; background: var(--gris-carbon);">
+                        <img src="${item.image || 'Img/EGOZN.png'}" alt="${nombre}" style="width: 80px; height: 100px; object-fit: cover; border-radius: 8px; background: var(--gris-carbon);">
                     </div>
                     
                     <!-- Información del producto -->
                     <div style="flex: 1; display: flex; flex-direction: column;">
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
-                            <h4 style="font-size: 16px; font-weight: 600; color: var(--plateado-brillante); margin: 0;">${item.nombre.toUpperCase()}</h4>
+                            <h4 style="font-size: 16px; font-weight: 600; color: var(--plateado-brillante); margin: 0;">${nombre.toUpperCase()}</h4>
                         </div>
                         
                         <!-- Precios -->
@@ -3088,7 +3113,7 @@
                         <!-- Detalles -->
                         <div style="margin-bottom: 12px;">
                             <p style="font-size: 14px; color: var(--plateado); margin: 2px 0;">Color: ${item.color || 'Marrón'}</p>
-                            <p style="font-size: 14px; color: var(--plateado); margin: 2px 0;">Talla: ${item.talla || 'S (EU)'}</p>
+                            <p style="font-size: 14px; color: var(--plateado); margin: 2px 0;">Talla: ${talla || 'S (EU)'}</p>
                         </div>
                         
                         <!-- Controles de cantidad -->
@@ -3096,12 +3121,12 @@
                             <button onclick="restarCantidad(${index})" style="background: none; border: 1px solid var(--plateado); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--plateado); border-radius: 4px;">
                                 −
                             </button>
-                            <span style="font-size: 16px; font-weight: 500; min-width: 20px; text-align: center;">${item.cantidad}</span>
+                            <span style="font-size: 16px; font-weight: 500; min-width: 20px; text-align: center;">${cantidad}</span>
                             <button onclick="sumarCantidad(${index})" style="background: none; border: 1px solid var(--plateado); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--plateado); border-radius: 4px;">
                                 +
                             </button>
                             <div style="margin-left: auto; font-size: 18px; font-weight: 600; color: var(--plateado-brillante);">
-                                € ${(item.precio * item.cantidad).toFixed(0)}
+                                € ${(precio * cantidad).toFixed(0)}
                             </div>
                         </div>
                         
@@ -3147,8 +3172,15 @@
         }
 
         function restarCantidad(index) {
-            if (carrito[index].quantity > 1) {
-                carrito[index].quantity--;
+            const item = carrito[index];
+            const cantidad = item.quantity || item.cantidad;
+            
+            if (cantidad > 1) {
+                if (item.quantity) {
+                    item.quantity--;
+                } else {
+                    item.cantidad--;
+                }
             } else {
                 carrito.splice(index, 1);
             }
@@ -3156,7 +3188,12 @@
         }
 
         function sumarCantidad(index) {
-            carrito[index].quantity++;
+            const item = carrito[index];
+            if (item.quantity) {
+                item.quantity++;
+            } else {
+                item.cantidad++;
+            }
             actualizarCarrito();
         }
 
