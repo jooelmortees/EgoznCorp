@@ -3003,6 +3003,9 @@
             const cantidadInput = document.querySelector('.modal-content input[type="number"]');
             const cantidad = cantidadInput ? parseInt(cantidadInput.value) : 1;
             
+            // Obtener imagen del modal
+            const img = document.getElementById('modalImagen');
+            
             // Obtener talla y color seleccionados
             const tallaSelect = document.querySelector('.modal-content select');
             const talla = tallaSelect ? tallaSelect.value : 'S (EU)';
@@ -4363,26 +4366,63 @@
             if (!supabase || !userId) return;
 
             try {
-                // Cargar carrito guardado del usuario desde localStorage
-                const savedCart = localStorage.getItem(`egozn_cart_${userId}`);
-                
-                if (savedCart) {
-                    const cartFromStorage = JSON.parse(savedCart);
-                    
+                // Intentar cargar desde la tabla cart_items
+                const { data, error } = await supabase
+                    .from('cart_items')
+                    .select('*')
+                    .eq('user_id', userId);
+
+                if (error) {
+                    console.log('ℹ️ Tabla cart_items no disponible, usando localStorage');
+                    // Fallback a localStorage
+                    const savedCart = localStorage.getItem(`egozn_cart_${userId}`);
+                    if (savedCart) {
+                        const cartFromStorage = JSON.parse(savedCart);
+                        if (carrito.length > 0) {
+                            const shouldSync = confirm('🛒 Encontramos un carrito guardado en tu cuenta.\n¿Deseas sincronizar con tu carrito actual?');
+                            if (shouldSync) {
+                                carrito = mergeCarritos(carrito, cartFromStorage);
+                            }
+                        } else {
+                            carrito = cartFromStorage;
+                        }
+                        actualizarCarrito();
+                    }
+                    return;
+                }
+
+                if (data && data.length > 0) {
+                    // Convertir datos de BD al formato local del carrito
+                    const cartFromDB = data.map(item => ({
+                        id: item.product_id,
+                        title: item.product_name,
+                        nombre: item.product_name,
+                        category: 'Lifestyle',
+                        categoria: 'Lifestyle',
+                        price: parseFloat(item.price),
+                        precio: parseFloat(item.price),
+                        quantity: item.quantity,
+                        cantidad: item.quantity,
+                        size: item.size,
+                        talla: item.size,
+                        color: 'Marrón',
+                        image: item.image_url || 'Img/EGOZN.png'
+                    }));
+
                     // Combinar con carrito local si existe
                     if (carrito.length > 0) {
                         const shouldSync = confirm('🛒 Encontramos un carrito guardado en tu cuenta.\n¿Deseas sincronizar con tu carrito actual?');
                         if (shouldSync) {
-                            carrito = mergeCarritos(carrito, cartFromStorage);
+                            carrito = mergeCarritos(carrito, cartFromDB);
                         }
                     } else {
-                        carrito = cartFromStorage;
+                        carrito = cartFromDB;
                     }
 
                     actualizarCarrito();
-                    console.log('✅ Carrito cargado desde storage:', carrito.length, 'items');
+                    console.log('✅ Carrito cargado desde BD:', carrito.length, 'items');
                 } else {
-                    // Si hay carrito local y no hay guardado, guardarlo
+                    // Si hay carrito local y no hay en BD, guardarlo
                     if (carrito.length > 0) {
                         await saveCartToDatabase();
                     }
@@ -4398,12 +4438,43 @@
             if (!supabase || !isUserLoggedIn) return;
 
             try {
-                // Por ahora, guardar en localStorage con prefijo de usuario
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user) return;
 
-                localStorage.setItem(`egozn_cart_${user.id}`, JSON.stringify(carrito));
-                console.log('✅ Carrito guardado localmente para usuario:', user.email);
+                // Intentar guardar en la tabla cart_items
+                try {
+                    // Primero, eliminar items existentes del usuario
+                    await supabase
+                        .from('cart_items')
+                        .delete()
+                        .eq('user_id', user.id);
+
+                    // Luego, insertar items actuales del carrito
+                    if (carrito.length > 0) {
+                        const cartItems = carrito.map(item => ({
+                            user_id: user.id,
+                            product_id: item.id || `${item.title || item.nombre}-${item.size || item.talla}`,
+                            product_name: item.title || item.nombre,
+                            price: parseFloat(item.price || item.precio),
+                            image_url: item.image || 'Img/EGOZN.png',
+                            size: item.size || item.talla,
+                            quantity: item.quantity || item.cantidad
+                        }));
+
+                        const { data, error } = await supabase
+                            .from('cart_items')
+                            .insert(cartItems);
+
+                        if (error) throw error;
+                        
+                        console.log('✅ Carrito guardado en BD:', cartItems.length, 'items');
+                    }
+                } catch (dbError) {
+                    console.log('ℹ️ Tabla cart_items no disponible, usando localStorage');
+                    // Fallback a localStorage si la tabla no existe
+                    localStorage.setItem(`egozn_cart_${user.id}`, JSON.stringify(carrito));
+                    console.log('✅ Carrito guardado localmente para usuario:', user.email);
+                }
                 
             } catch (error) {
                 console.error('❌ Error guardando carrito:', error);
