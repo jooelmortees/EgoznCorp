@@ -3168,9 +3168,15 @@
                 subtotalElement.textContent = total.toFixed(0);
             }
 
-            // 🛒 GUARDAR AUTOMÁTICAMENTE EN BD SI ESTÁ LOGUEADO
-            if (isUserLoggedIn) {
-                saveCartToDatabase().catch(console.error);
+            // 🛒 GUARDAR AUTOMÁTICAMENTE EN BD SI ESTÁ LOGUEADO (sin bucle)
+            if (isUserLoggedIn && !isUpdatingCart) {
+                isUpdatingCart = true;
+                saveCartToDatabase().then(() => {
+                    isUpdatingCart = false;
+                }).catch((err) => {
+                    console.error('Error guardando:', err);
+                    isUpdatingCart = false;
+                });
             }
         }
 
@@ -3961,7 +3967,9 @@
             
             // Escuchar cambios de autenticación
             supabase.auth.onAuthStateChange((event, session) => {
-                if (event === 'SIGNED_IN') {
+                console.log('🔐 Auth State Change:', event, session?.user?.email);
+                
+                if (event === 'SIGNED_IN' && session?.user) {
                     showUserInfo(session.user);
                     // Limpiar la URL si tiene tokens de OAuth
                     if (window.location.hash.includes('access_token')) {
@@ -3996,6 +4004,7 @@
         // Funciones del modal de login y dropdown de usuario
         let isUserLoggedIn = false;
         let cartLoadedForUser = null; // Evitar cargar carrito múltiples veces
+        let isUpdatingCart = false; // Evitar bucles al guardar carrito
 
         function toggleUserMenu() {
             if (!isUserLoggedIn) {
@@ -4198,18 +4207,26 @@
         async function checkUser() {
             if (!supabase) return;
 
+        async function checkUser() {
+            if (!supabase) return;
+
             try {
                 const { data: { user } } = await supabase.auth.getUser();
                 
+                // Solo procesar si no se ha cargado ya para este usuario
                 if (user && cartLoadedForUser !== user.id) {
+                    console.log('🔍 CheckUser encontró usuario no procesado:', user.email);
                     showUserInfo(user);
                 } else if (!user) {
                     hideUserInfo();
+                } else {
+                    console.log('ℹ️ Usuario ya procesado, saltando checkUser');
                 }
             } catch (error) {
                 console.error('Error checking user:', error);
                 hideUserInfo();
             }
+        }
         }
 
         // Esta función ya está implementada arriba con funcionalidad de BD
@@ -4365,6 +4382,8 @@
         // Cargar carrito desde la base de datos
         async function loadCartFromDatabase(userId) {
             if (!supabase || !userId) return;
+            
+            console.log('🛒 Cargando carrito para usuario:', userId);
 
             try {
                 // Intentar cargar desde la tabla cart_items
@@ -4378,18 +4397,15 @@
                     // Fallback a localStorage
                     const savedCart = localStorage.getItem(`egozn_cart_${userId}`);
                     if (savedCart) {
-                        const cartFromStorage = JSON.parse(savedCart);
-                        
-                        // SIMPLIFICADO: Solo cargar si el carrito local está vacío
-                        if (carrito.length === 0 && cartFromStorage.length > 0) {
-                            carrito = cartFromStorage;
-                            console.log('✅ Carrito cargado desde localStorage:', carrito.length, 'items');
-                        } else if (carrito.length > 0) {
-                            console.log('ℹ️ Carrito local mantiene prioridad');
+                        try {
+                            const cartFromStorage = JSON.parse(savedCart);
+                            carrito = cartFromStorage; // REEMPLAZAR, no fusionar
+                            console.log('✅ Carrito reemplazado desde localStorage:', carrito.length, 'items');
+                        } catch (e) {
+                            console.error('Error parseando carrito desde localStorage:', e);
                         }
-                        
-                        actualizarCarrito();
                     }
+                    actualizarCarrito();
                     return;
                 }
 
@@ -4411,22 +4427,10 @@
                         image: item.image_url || 'Img/EGOZN.png'
                     }));
 
-                    // SIMPLIFICADO: Solo cargar el carrito de BD si el local está vacío
-                    if (carrito.length === 0) {
-                        carrito = cartFromDB;
-                        console.log('✅ Carrito cargado desde BD:', carrito.length, 'items');
-                    } else {
-                        console.log('ℹ️ Carrito local mantiene prioridad');
-                        // Guardar carrito local en BD para sincronizar
-                        await saveCartToDatabase();
-                    }
-
+                    // REEMPLAZAR carrito completo, no fusionar
+                    carrito = cartFromDB;
+                    console.log('✅ Carrito reemplazado desde BD:', carrito.length, 'items');
                     actualizarCarrito();
-                } else {
-                    // Si hay carrito local y no hay en BD, guardarlo
-                    if (carrito.length > 0) {
-                        await saveCartToDatabase();
-                    }
                 }
                 
             } catch (error) {
@@ -4436,19 +4440,23 @@
 
         // Guardar carrito en la base de datos
         async function saveCartToDatabase() {
-            if (!supabase || !isUserLoggedIn) return;
+            if (!supabase || !isUserLoggedIn || isUpdatingCart) return;
 
             try {
                 const { data: { user } } = await supabase.auth.getUser();
                 if (!user) return;
 
+                console.log('💾 Guardando carrito en BD:', carrito.length, 'items');
+
                 // Intentar guardar en la tabla cart_items
                 try {
                     // Primero, eliminar items existentes del usuario
-                    await supabase
+                    const { error: deleteError } = await supabase
                         .from('cart_items')
                         .delete()
                         .eq('user_id', user.id);
+
+                    if (deleteError) throw deleteError;
 
                     // Luego, insertar items actuales del carrito
                     if (carrito.length > 0) {
@@ -4462,19 +4470,21 @@
                             quantity: item.quantity || item.cantidad
                         }));
 
-                        const { data, error } = await supabase
+                        const { data: insertData, error: insertError } = await supabase
                             .from('cart_items')
                             .insert(cartItems);
 
-                        if (error) throw error;
+                        if (insertError) throw insertError;
                         
                         console.log('✅ Carrito guardado en BD:', cartItems.length, 'items');
+                    } else {
+                        console.log('✅ Carrito vacío guardado (eliminados items antiguos)');
                     }
                 } catch (dbError) {
-                    console.log('ℹ️ Tabla cart_items no disponible, usando localStorage');
+                    console.log('ℹ️ Usando localStorage como respaldo');
                     // Fallback a localStorage si la tabla no existe
                     localStorage.setItem(`egozn_cart_${user.id}`, JSON.stringify(carrito));
-                    console.log('✅ Carrito guardado localmente para usuario:', user.email);
+                    console.log('✅ Carrito guardado en localStorage');
                 }
                 
             } catch (error) {
@@ -4586,11 +4596,18 @@
 
         // Función mejorada para mostrar info del usuario (incluyendo crear perfil)
         async function showUserInfo(user) {
+            // Evitar procesamiento múltiple del mismo usuario
+            if (isUserLoggedIn && cartLoadedForUser === user.id) {
+                console.log('ℹ️ Usuario ya procesado, saltando...');
+                return;
+            }
+            
             const profileIcon = document.querySelector('.profile-icon');
             const dropdownUserEmail = document.getElementById('dropdownUserEmail');
             
             // Marcar como usuario logueado
             isUserLoggedIn = true;
+            cartLoadedForUser = user.id;
             
             // Cambiar el icono de perfil por uno activo
             profileIcon.style.color = 'var(--dorado)';
@@ -4602,13 +4619,16 @@
             // Crear/actualizar perfil en la base de datos
             await createOrUpdateProfile(user);
             
-            // 🛒 CARGAR CARRITO SINCRONIZADO (solo una vez por usuario)
-            if (cartLoadedForUser !== user.id) {
+            // 🛒 CARGAR CARRITO SINCRONIZADO (solo si carrito local está vacío)
+            if (carrito.length === 0) {
                 await loadCartFromDatabase(user.id);
-                cartLoadedForUser = user.id;
+            } else {
+                console.log('ℹ️ Manteniendo carrito local actual');
+                // Guardar carrito actual en BD para sincronizar
+                await saveCartToDatabase();
             }
             
-            console.log('👤 Usuario logueado:', user.email);
+            console.log('👤 Usuario logueado:', user.email, '| Carrito items:', carrito.length);
         }
 
         function hideUserInfo() {
