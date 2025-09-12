@@ -135,21 +135,10 @@
             align-items: center;
             padding: 0 20px;
             position: relative;
-            width: 100%;
-            box-sizing: border-box;
         }
 
         .nav-logo {
             flex: 0 0 auto;
-            z-index: 1002;
-            position: relative;
-        }
-
-        .nav-logo img {
-            height: 3rem;
-            width: auto;
-            max-width: 120px;
-            object-fit: contain;
         }
 
         .nav-menu {
@@ -161,7 +150,6 @@
             transform: translateX(-50%);
             margin: 0;
             padding: 0;
-            z-index: 1001;
         }
 
         .nav-icons {
@@ -169,8 +157,6 @@
             gap: 20px;
             align-items: center;
             flex: 0 0 auto;
-            z-index: 1002;
-            position: relative;
         }
 
         .nav-icon {
@@ -575,8 +561,6 @@
             letter-spacing: 2px;
             position: relative;
             transition: all 0.3s;
-            outline: none;
-            border: none;
         }
 
         .nav-menu a::after {
@@ -597,100 +581,6 @@
 
         .nav-menu a:hover::after {
             width: 100%;
-        }
-
-        /* Eliminar marcos y outlines en enlaces del navbar */
-        .nav-menu a:focus,
-        .nav-menu a:active,
-        .nav-menu a:visited {
-            outline: none !important;
-            border: none !important;
-            box-shadow: none !important;
-        }
-
-        /* Eliminar marcos en todos los estados para móvil también */
-        .nav-menu a {
-            -webkit-tap-highlight-color: transparent;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            -khtml-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        /* Estilos para navegación activa */
-        .nav-menu a.nav-active {
-            color: var(--plateado-brillante);
-            text-shadow: 0 0 15px var(--plateado-brillante);
-            transform: scale(1.05);
-            outline: none !important;
-            border: none !important;
-            box-shadow: none !important;
-        }
-
-        .nav-menu a.nav-active::after {
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--plateado), var(--plateado-brillante), var(--plateado));
-            box-shadow: 0 0 10px var(--plateado-brillante);
-        }
-
-        /* Transiciones suaves para enlaces del navbar */
-        .nav-menu a {
-            transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
-        }
-
-        /* Animaciones de entrada para secciones durante navegación */
-        .section-enter {
-            animation: sectionSlideIn 0.8s ease-out forwards;
-        }
-
-        @keyframes sectionSlideIn {
-            from {
-                transform: translateY(20px);
-                opacity: 0.7;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        /* Efecto de iluminación en la sección activa */
-        .section-highlight {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .section-highlight::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(192, 192, 192, 0.05), transparent);
-            animation: sectionGlow 1.5s ease-out;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        @keyframes sectionGlow {
-            from {
-                left: -100%;
-            }
-            to {
-                left: 100%;
-            }
-        }
-
-        /* Mejorar el indicador de scroll durante la navegación */
-        .scroll-indicator.navigating {
-            height: 4px;
-            background: linear-gradient(to right, var(--plateado-brillante), var(--plateado), var(--plateado-brillante));
-            box-shadow: 0 0 10px rgba(192, 192, 192, 0.6);
-            transition: all 0.3s ease;
         }
 
         /* Overlay cuando el menú está abierto */
@@ -1514,23 +1404,15 @@
             flex-direction: column;
             gap: 5px;
             cursor: pointer;
-            padding: 8px;
-            z-index: 1003;
-            position: relative;
-            min-width: 44px;
-            min-height: 44px;
-            justify-content: center;
-            align-items: center;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
+            padding: 10px;
+            z-index: 1001;
         }
 
         .mobile-menu-toggle span {
-            width: 25px;
+            width: 30px;
             height: 3px;
             background: var(--plateado);
             transition: all 0.3s;
-            border-radius: 2px;
         }
 
         /* Animación del hamburger cuando está activo */
@@ -1546,331 +1428,8 @@
             transform: rotate(-45deg) translate(5px, -7px);
         }
 
-        /* Feedback visual al tocar en móvil */
-        .mobile-menu-toggle:active {
-            opacity: 0.7;
-        }
-
 
         /* ===== RESPONSIVE DESIGN ===== */
-
-        /* Extra Large Desktop (1600px+) */
-        @media (min-width: 1600px) {
-            .nav-container {
-                max-width: 1800px;
-                padding: 0 40px;
-            }
-            
-            .nav-menu {
-                gap: 50px;
-            }
-            
-            .nav-menu a {
-                font-size: 20px;
-            }
-            
-            .nav-logo img {
-                height: 3.5rem;
-                max-width: 140px;
-            }
-        }
-
-        /* Large Desktop (1400px - 1599px) */
-        @media (min-width: 1400px) and (max-width: 1599px) {
-            .nav-container {
-                max-width: 1400px;
-                padding: 0 30px;
-            }
-            
-            .nav-menu {
-                gap: 45px;
-            }
-        }
-
-        /* Standard Desktop (1200px - 1399px) */
-        @media (min-width: 1200px) and (max-width: 1399px) {
-            .nav-container {
-                max-width: 1200px;
-                padding: 0 25px;
-            }
-            
-            .nav-menu {
-                gap: 35px;
-            }
-            
-            .nav-menu a {
-                font-size: 17px;
-            }
-        }
-
-        /* Small Desktop/Large Laptop (992px - 1199px) */
-        @media (min-width: 992px) and (max-width: 1199px) {
-            .nav-container {
-                padding: 0 20px;
-            }
-            
-            .nav-menu {
-                gap: 30px;
-            }
-            
-            .nav-menu a {
-                font-size: 16px;
-                letter-spacing: 1px;
-            }
-            
-            .nav-logo img {
-                height: 2.8rem;
-                max-width: 110px;
-            }
-            
-            .nav-icons {
-                gap: 15px;
-            }
-        }
-
-        /* Tablet Landscape (768px - 991px) */
-        @media (min-width: 768px) and (max-width: 991px) {
-            .navbar {
-                padding: 12px 0;
-            }
-            
-            .nav-container {
-                padding: 0 15px;
-            }
-            
-            .nav-menu {
-                gap: 25px;
-            }
-            
-            .nav-menu a {
-                font-size: 15px;
-                letter-spacing: 1px;
-            }
-            
-            .nav-logo img {
-                height: 2.5rem;
-                max-width: 100px;
-            }
-            
-            .nav-icons {
-                gap: 12px;
-            }
-            
-            .nav-icon {
-                padding: 6px;
-            }
-        }
-
-        /* Mobile Styles Start Here */
-        @media (max-width: 767px) {
-            .navbar {
-                padding: 12px 0;
-            }
-            
-            .nav-container {
-                padding: 0 20px;
-                justify-content: flex-start;
-                position: relative;
-            }
-            
-            .nav-logo {
-                flex: 0 0 auto;
-                z-index: 1003;
-            }
-            
-            .nav-logo img {
-                height: 2.5rem;
-                max-width: 100px;
-            }
-            
-            .mobile-menu-toggle {
-                display: flex;
-                position: absolute;
-                left: 50%;
-                transform: translateX(-50%);
-                z-index: 1003;
-            }
-            
-            .nav-icons {
-                position: absolute;
-                right: 0;
-                gap: 15px;
-                z-index: 1003;
-            }
-            
-            .nav-icon {
-                padding: 10px;
-                min-width: 44px;
-                min-height: 44px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-            
-            .nav-menu {
-                position: fixed;
-                left: -100%;
-                top: 80px;
-                flex-direction: column;
-                background: var(--gris-carbon);
-                width: 100%;
-                text-align: center;
-                transition: left 0.3s ease;
-                padding: 40px 0;
-                border-bottom: 2px solid var(--plateado);
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-                z-index: 1002;
-                height: calc(100vh - 80px);
-                overflow-y: auto;
-                transform: none;
-                gap: 0;
-            }
-
-            .nav-menu.active {
-                left: 0;
-            }
-
-            .nav-menu li {
-                margin: 20px 0;
-                width: 100%;
-            }
-            
-            .nav-menu a {
-                font-size: 20px;
-                padding: 15px 20px;
-                display: block;
-                width: 100%;
-                min-height: 50px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                letter-spacing: 2px;
-            }
-        }
-
-        /* Mobile Medium (480px - 767px) */
-        @media (min-width: 480px) and (max-width: 767px) {
-            .nav-container {
-                padding: 0 20px;
-            }
-            
-            .nav-logo img {
-                height: 2.4rem;
-                max-width: 95px;
-            }
-            
-            .nav-menu {
-                top: 75px;
-                height: calc(100vh - 75px);
-            }
-        }
-
-        /* Mobile Large (576px - 767px) */
-        @media (min-width: 576px) and (max-width: 767px) {
-            .nav-container {
-                padding: 0 25px;
-            }
-            
-            .nav-icons {
-                gap: 12px;
-            }
-        }
-
-        /* Mobile Small (320px - 479px) */
-        @media (max-width: 479px) {
-            .navbar {
-                padding: 8px 0;
-            }
-            
-            .nav-container {
-                padding: 0 10px;
-            }
-            
-            .nav-logo img {
-                height: 2rem;
-                max-width: 80px;
-            }
-            
-            .mobile-menu-toggle {
-                min-width: 40px;
-                min-height: 40px;
-            }
-            
-            .mobile-menu-toggle span {
-                width: 22px;
-                height: 2px;
-            }
-            
-            .nav-icons {
-                gap: 8px;
-            }
-            
-            .nav-icon {
-                padding: 6px;
-                min-width: 36px;
-                min-height: 36px;
-            }
-            
-            .nav-menu {
-                top: 60px;
-                height: calc(100vh - 60px);
-                padding: 20px 0;
-            }
-            
-            .nav-menu a {
-                font-size: 16px;
-                padding: 12px 15px;
-                min-height: 45px;
-            }
-        }
-
-        /* Ultra Small Mobile (max 320px) */
-        @media (max-width: 320px) {
-            .nav-container {
-                padding: 0 8px;
-            }
-            
-            .nav-logo img {
-                height: 1.8rem;
-                max-width: 75px;
-            }
-            
-            .mobile-menu-toggle {
-                min-width: 36px;
-                min-height: 36px;
-            }
-            
-            .nav-icons {
-                gap: 6px;
-            }
-            
-            .nav-icon {
-                padding: 4px;
-                min-width: 32px;
-                min-height: 32px;
-            }
-        }
-
-        /* Dropdown responsivo */
-        @media (max-width: 767px) {
-            .user-dropdown {
-                right: 0;
-                min-width: 280px;
-                max-width: calc(100vw - 20px);
-                top: calc(100% + 15px);
-            }
-            
-            .user-dropdown::before {
-                right: 15px;
-            }
-        }
-
-        @media (max-width: 479px) {
-            .user-dropdown {
-                min-width: 250px;
-                max-width: calc(100vw - 15px);
-            }
-        }
 
         /* Extra Large Screens (1400px+) */
         @media (min-width: 1400px) {
@@ -2814,252 +2373,6 @@
             }
         }
 
-        /* Mejoras adicionales para el navbar responsivo */
-        
-        /* Asegurar que el navbar nunca sea mayor que la ventana */
-        .nav-container {
-            width: 100%;
-            max-width: 100vw;
-            box-sizing: border-box;
-        }
-
-        /* Overlay para cerrar menú móvil al tocar fuera */
-        .nav-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-        }
-
-        .nav-overlay.active {
-            display: block;
-        }
-
-        /* Mejoras para dropdown de usuario en móvil */
-        @media (max-width: 767px) {
-            .user-dropdown {
-                position: fixed;
-                top: auto;
-                bottom: 20px;
-                right: 15px;
-                left: 15px;
-                min-width: auto;
-                max-width: none;
-                border-radius: 15px;
-                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            }
-            
-            .user-dropdown::before {
-                display: none;
-            }
-        }
-
-        /* Animaciones suaves para transiciones del menú */
-        .nav-menu {
-            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-        }
-
-        .mobile-menu-toggle span {
-            transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-        }
-
-        /* Estados de hover mejorados para pantallas táctiles */
-        @media (hover: hover) and (pointer: fine) {
-            .nav-menu a:hover::after {
-                width: 100%;
-            }
-            
-            .nav-icon:hover {
-                transform: translateY(-2px);
-            }
-        }
-
-        /* Mejoras para pantallas ultra pequeñas (iPhone SE, etc.) */
-        @media (max-width: 375px) {
-            .nav-container {
-                padding: 0 10px;
-            }
-            
-            .nav-logo img {
-                height: 1.8rem;
-                max-width: 70px;
-            }
-            
-            .mobile-menu-toggle span {
-                width: 20px;
-                height: 2px;
-            }
-            
-            .nav-icon {
-                min-width: 32px;
-                min-height: 32px;
-                padding: 4px;
-            }
-        }
-
-        /* Asegurar que el menú no cause scroll horizontal */
-        @media (max-width: 767px) {
-            .nav-menu {
-                overflow-x: hidden;
-                -webkit-overflow-scrolling: touch;
-            }
-            
-            .nav-menu a {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-        }
-
-        /* Optimización para tablets en orientación horizontal */
-        @media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
-            .navbar {
-                padding: 8px 0;
-            }
-            
-            .nav-logo img {
-                height: 2.2rem;
-            }
-            
-            .nav-menu {
-                gap: 20px;
-            }
-            
-            .nav-menu a {
-                font-size: 14px;
-            }
-        }
-
-        /* Pantallas plegables y ultrawide */
-        @media (min-width: 2000px) {
-            .nav-container {
-                max-width: 2200px;
-                padding: 0 50px;
-            }
-            
-            .nav-menu {
-                gap: 60px;
-            }
-            
-            .nav-menu a {
-                font-size: 22px;
-            }
-            
-            .nav-logo img {
-                height: 4rem;
-                max-width: 160px;
-            }
-        }
-
-        /* Pantallas 4K */
-        @media (min-width: 3840px) {
-            .nav-container {
-                max-width: 3000px;
-                padding: 0 80px;
-            }
-            
-            .navbar {
-                padding: 20px 0;
-            }
-            
-            .nav-menu {
-                gap: 80px;
-            }
-            
-            .nav-menu a {
-                font-size: 26px;
-            }
-            
-            .nav-logo img {
-                height: 5rem;
-                max-width: 200px;
-            }
-        }
-
-        /* Smartwatches y pantallas muy pequeñas */
-        @media (max-width: 280px) {
-            .nav-container {
-                padding: 0 5px;
-                gap: 2px;
-            }
-            
-            .nav-logo img {
-                height: 1.5rem;
-                max-width: 60px;
-            }
-            
-            .mobile-menu-toggle {
-                min-width: 30px;
-                min-height: 30px;
-            }
-            
-            .mobile-menu-toggle span {
-                width: 16px;
-                height: 1.5px;
-            }
-            
-            .nav-icon {
-                min-width: 28px;
-                min-height: 28px;
-                padding: 2px;
-            }
-            
-            .nav-menu a {
-                font-size: 14px;
-                padding: 10px;
-                min-height: 40px;
-            }
-        }
-
-        /* Foldable phones en modo desplegado */
-        @media (min-width: 800px) and (max-width: 900px) and (orientation: portrait) {
-            .nav-container {
-                padding: 0 30px;
-            }
-            
-            .nav-menu {
-                gap: 35px;
-            }
-            
-            .nav-menu a {
-                font-size: 16px;
-            }
-        }
-
-        /* Mejoras para accesibilidad y focus */
-        .nav-menu a:focus,
-        .nav-icon:focus,
-        .mobile-menu-toggle:focus {
-            outline: 2px solid var(--plateado-brillante);
-            outline-offset: 2px;
-        }
-
-        /* Evitar overlapping en pantallas muy anchas */
-        @media (min-width: 1800px) {
-            .nav-menu {
-                position: relative;
-                left: auto;
-                transform: none;
-            }
-            
-            .nav-container {
-                justify-content: space-between;
-            }
-        }
-
-        /* Navbar sticky mejorado para móviles */
-        @media (max-width: 767px) {
-            .navbar {
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-                background: rgba(26, 26, 26, 0.98);
-            }
-        }
-
 
 
         /* Indicador de scroll */
@@ -3071,31 +2384,6 @@
             background: linear-gradient(to right, var(--plateado), var(--plateado-brillante));
             transition: width 0.3s;
             z-index: 10000;
-        }
-
-        /* Eliminar marcos blancos de focus en navbar */
-        .nav-menu a,
-        .nav-menu a:focus,
-        .nav-menu a:active,
-        .nav-menu a:visited,
-        .nav-menu a:link,
-        .nav-menu a:hover {
-            outline: 0 !important;
-            outline: none !important;
-            border: none !important;
-            box-shadow: none !important;
-            -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
-            -webkit-tap-highlight-color: transparent !important;
-            -webkit-focus-ring-color: transparent !important;
-        }
-
-        /* Para móviles específicamente */
-        @media (max-width: 767px) {
-            .nav-menu a {
-                -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
-                -moz-tap-highlight-color: rgba(0,0,0,0) !important;
-                tap-highlight-color: rgba(0,0,0,0) !important;
-            }
         }
     </style>
 </head>
@@ -3614,9 +2902,13 @@
 
             // Prevenir scroll cuando el menú está abierto en móvil
             if (navMenu.classList.contains('active')) {
-                bloquearScroll();
+                body.style.overflow = 'hidden';
+                body.style.position = 'fixed';
+                body.style.width = '100%';
             } else {
-                desbloquearScroll();
+                body.style.overflow = '';
+                body.style.position = '';
+                body.style.width = '';
             }
         }
 
@@ -3629,7 +2921,9 @@
                 if (navMenu.classList.contains('active')) {
                     navMenu.classList.remove('active');
                     mobileToggle.classList.remove('active');
-                    desbloquearScroll();
+                    document.body.style.overflow = '';
+                    document.body.style.position = '';
+                    document.body.style.width = '';
                 }
             });
         });
@@ -3643,7 +2937,9 @@
             if (!navContainer.contains(e.target) && navMenu.classList.contains('active')) {
                 navMenu.classList.remove('active');
                 mobileToggle.classList.remove('active');
-                desbloquearScroll();
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.width = '';
             }
         });
 
@@ -3655,7 +2951,9 @@
             if (window.innerWidth > 767 && navMenu.classList.contains('active')) {
                 navMenu.classList.remove('active');
                 mobileToggle.classList.remove('active');
-                desbloquearScroll();
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.width = '';
             }
         });
 
@@ -4009,145 +3307,18 @@
             parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
         });
 
-        // Smooth Scroll mejorado con animación de deslizamiento
+        // Smooth Scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const target = document.querySelector(targetId);
-                
+                const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
-                    // Calcular offset basado en el navbar
-                    const navbarHeight = document.querySelector('.navbar').offsetHeight;
-                    const targetPosition = target.offsetTop - navbarHeight - 20;
-                    
-                    // Añadir clase de navegación al indicador de scroll
-                    const scrollIndicator = document.getElementById('scrollIndicator');
-                    scrollIndicator.classList.add('navigating');
-                    
-                    // Animación de deslizamiento suave con easing personalizado
-                    smoothScrollTo(targetPosition, 1200, () => {
-                        // Callback cuando termina la animación
-                        scrollIndicator.classList.remove('navigating');
-                        
-                        // Añadir efecto de iluminación a la sección
-                        target.classList.add('section-highlight');
-                        setTimeout(() => {
-                            target.classList.remove('section-highlight');
-                        }, 1500);
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
                     });
-                    
-                    // Efecto visual en el navbar
-                    highlightNavItem(this);
                 }
             });
-        });
-
-        // Función de scroll suave personalizada con easing mejorado
-        function smoothScrollTo(targetY, duration, callback) {
-            const startY = window.pageYOffset;
-            const difference = targetY - startY;
-            const startTime = performance.now();
-
-            // Función de easing más suave y natural
-            function easeInOutCubic(t) {
-                return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
-            }
-
-            function step() {
-                const elapsed = performance.now() - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-                const ease = easeInOutCubic(progress);
-                
-                window.scrollTo(0, startY + difference * ease);
-                
-                if (progress < 1) {
-                    requestAnimationFrame(step);
-                } else if (callback) {
-                    // Ejecutar callback cuando la animación termine
-                    callback();
-                }
-            }
-            
-            requestAnimationFrame(step);
-        }
-
-        // Destacar elemento activo del navbar durante la navegación
-        function highlightNavItem(activeLink) {
-            // Remover clase activa de todos los enlaces
-            document.querySelectorAll('.nav-menu a').forEach(link => {
-                link.classList.remove('nav-active');
-            });
-            
-            // Agregar clase activa al enlace clickeado
-            activeLink.classList.add('nav-active');
-            
-            // Crear efecto de onda en el enlace
-            createRippleEffect(activeLink);
-        }
-
-        // Efecto de onda en el enlace del navbar
-        function createRippleEffect(element) {
-            const rect = element.getBoundingClientRect();
-            const ripple = document.createElement('span');
-            
-            ripple.style.cssText = `
-                position: absolute;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.3);
-                transform: scale(0);
-                animation: rippleEffect 0.6s linear;
-                pointer-events: none;
-                left: 50%;
-                top: 50%;
-                width: 20px;
-                height: 20px;
-                margin-left: -10px;
-                margin-top: -10px;
-            `;
-            
-            element.style.position = 'relative';
-            element.appendChild(ripple);
-            
-            setTimeout(() => {
-                ripple.remove();
-            }, 600);
-        }
-
-        // Detectar sección visible y actualizar navbar automáticamente
-        function updateActiveNavOnScroll() {
-            const sections = document.querySelectorAll('section[id]');
-            const navLinks = document.querySelectorAll('.nav-menu a[href^="#"]');
-            const navbarHeight = document.querySelector('.navbar').offsetHeight;
-            
-            let currentSection = '';
-            
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop - navbarHeight - 50;
-                const sectionHeight = section.offsetHeight;
-                
-                if (window.pageYOffset >= sectionTop && 
-                    window.pageYOffset < sectionTop + sectionHeight) {
-                    currentSection = section.getAttribute('id');
-                }
-            });
-            
-            // Actualizar estado activo del navbar
-            navLinks.forEach(link => {
-                link.classList.remove('nav-active');
-                if (link.getAttribute('href') === `#${currentSection}`) {
-                    link.classList.add('nav-active');
-                }
-            });
-        }
-
-        // Optimizar scroll listener para mejor rendimiento
-        let scrollTimeout;
-        window.addEventListener('scroll', () => {
-            if (scrollTimeout) {
-                clearTimeout(scrollTimeout);
-            }
-            scrollTimeout = setTimeout(updateActiveNavOnScroll, 50);
         });
 
         // Sistema de notificaciones
@@ -4259,6 +3430,25 @@
                 }, 2000);
             }
         });
+
+        // Detección de tiempo del día para sugerencias
+        const hour = new Date().getHours();
+        let timeMessage = '';
+
+        if (hour >= 5 && hour < 10) {
+            timeMessage = '¡Buenos días! ¿Listo para el gym?';
+        } else if (hour >= 10 && hour < 17) {
+            timeMessage = 'Perfecto para tu día productivo';
+        } else if (hour >= 17 && hour < 21) {
+            timeMessage = 'Hora del after work con estilo';
+        } else {
+            timeMessage = '¡La noche es tuya!';
+        }
+
+        setTimeout(() => {
+            showNotification(timeMessage);
+        }, 3000);
+
         // Inicialización completa
         document.addEventListener('DOMContentLoaded', () => {
             console.log('%cEGOZN LIFESTYLE', 'font-size: 50px; font-weight: bold; background: linear-gradient(45deg, #c0c0c0, #e8e8e8); -webkit-background-clip: text; -webkit            -text-fill-color: transparent;');
