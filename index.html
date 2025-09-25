@@ -653,32 +653,17 @@
             }
         }
 
-        /* Efecto de iluminación en la sección activa */
+        /* Efecto de iluminación en la sección activa - DESHABILITADO */
         .section-highlight {
-            position: relative;
-            overflow: hidden;
+            /* Efecto deshabilitado */
         }
 
         .section-highlight::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(192, 192, 192, 0.05), transparent);
-            animation: sectionGlow 1.5s ease-out;
-            pointer-events: none;
-            z-index: 1;
+            /* Efecto deshabilitado */
         }
 
         @keyframes sectionGlow {
-            from {
-                left: -100%;
-            }
-            to {
-                left: 100%;
-            }
+            /* Animación deshabilitada */
         }
 
         /* Mejorar el indicador de scroll durante la navegación */
@@ -1483,11 +1468,14 @@
         }
 
         .loader-logo {
-            font-size: 100px;
+            font-size: 150px;
             font-family: 'Bebas Neue', cursive;
-            letter-spacing: 15px;
-            color: var(--plateado);
-            animation: pulse 1.5s ease-in-out infinite;
+            letter-spacing: 20px;
+            background: linear-gradient(45deg, var(--plateado), var(--plateado-brillante), var(--plateado));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 1.5s ease-in-out infinite, metalShine 3s linear infinite;
         }
 
         @keyframes pulse {
@@ -3680,6 +3668,26 @@
             }
         }
 
+        // Función para cerrar carrito al hacer clic fuera (solo desktop)
+        function cerrarCarritoAlClickFuera() {
+            document.addEventListener('click', function(event) {
+                const carritoSidebar = document.getElementById('carritoSidebar');
+                const cartIcon = document.querySelector('.cart-icon');
+                
+                // Solo aplicar en desktop (pantallas mayores a 768px)
+                if (window.innerWidth > 768) {
+                    // Si el carrito está abierto
+                    if (carritoSidebar.classList.contains('active')) {
+                        // Si el clic no fue dentro del carrito ni en el icono del carrito
+                        if (!carritoSidebar.contains(event.target) && !cartIcon.contains(event.target)) {
+                            carritoSidebar.classList.remove('active');
+                            desbloquearScroll();
+                        }
+                    }
+                }
+            });
+        }
+
         function agregarAlCarrito() {
             // Simular agregar producto
             const nombre = document.getElementById('modalNombre').textContent;
@@ -4013,11 +4021,11 @@
                         // Callback cuando termina la animación
                         scrollIndicator.classList.remove('navigating');
                         
-                        // Añadir efecto de iluminación a la sección
-                        target.classList.add('section-highlight');
-                        setTimeout(() => {
-                            target.classList.remove('section-highlight');
-                        }, 1500);
+                        // Efecto de iluminación deshabilitado
+                        // target.classList.add('section-highlight');
+                        // setTimeout(() => {
+                        //     target.classList.remove('section-highlight');
+                        // }, 1500);
                     });
                     
                     // Efecto visual en el navbar
@@ -4304,6 +4312,9 @@
                     dropdown.classList.remove('active');
                 }
             });
+
+            // Inicializar funcionalidad para cerrar carrito al hacer clic fuera
+            cerrarCarritoAlClickFuera();
         });
 
         // Animación de texto cambiante con frases mejoradas
