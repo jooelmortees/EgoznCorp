@@ -3053,7 +3053,7 @@
             left: 0;
             height: 3px;
             background: linear-gradient(to right, var(--plateado), var(--plateado-brillante));
-            transition: width 0.3s;
+            transition: none;
             z-index: 10000;
         }
 
@@ -4141,51 +4141,12 @@
             scrollTimeout = setTimeout(updateActiveNavOnScroll, 50);
         });
 
-        // Sistema de notificaciones
-        function showNotification(message) {
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 100px;
-                right: -400px;
-                background: var(--gris-carbon);
-                border: 2px solid var(--plateado);
-                padding: 20px 30px;
-                color: var(--plateado-brillante);
-                font-size: 18px;
-                font-weight: 700;
-                letter-spacing: 2px;
-                z-index: 4000;
-                transition: right 0.5s ease-out;
-                box-shadow: 0 0 30px rgba(192, 192, 192, 0.5);
-            `;
-            notification.textContent = message;
-            document.body.appendChild(notification);
-
-            setTimeout(() => {
-                notification.style.right = '20px';
-            }, 100);
-
-            setTimeout(() => {
-                notification.style.right = '-400px';
-                setTimeout(() => notification.remove(), 500);
-            }, 3000);
-        }
-
         // Mejorar la función de agregar al carrito con notificación
         const originalAgregarAlCarrito = agregarAlCarrito;
         agregarAlCarrito = function () {
             originalAgregarAlCarrito();
-            showNotification('¡AÑADIDO A TU ESTILO!');
+            // showNotification('¡AÑADIDO A TU ESTILO!');
         };
-
-        // Indicador de progreso de scroll
-        window.addEventListener('scroll', () => {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            document.getElementById('scrollIndicator').style.width = scrolled + '%';
-        });
 
         // Product Hover 3D Effect
         document.querySelectorAll('.producto-card').forEach(card => {
@@ -4391,32 +4352,6 @@
                 trackEvent('Lifestyle', 'view', title);
             });
         });
-
-        // Sistema de recomendaciones basado en hora del día
-        function recomendarProductos() {
-            const hour = new Date().getHours();
-            let recomendacion = '';
-
-            if (hour >= 5 && hour < 12) {
-                recomendacion = 'gym';
-                showNotification('🏋️ Mira nuestra colección GYM & SPORT');
-            } else if (hour >= 12 && hour < 18) {
-                recomendacion = 'casual';
-                showNotification('☀️ Descubre nuestros CASUAL DAILY essentials');
-            } else {
-                recomendacion = 'night';
-                showNotification('🌙 Explora la colección NIGHT OUT');
-            }
-
-            // Resaltar productos recomendados
-            document.querySelectorAll('.producto-card').forEach(card => {
-                if (card.dataset.categoria.includes(recomendacion)) {
-                    card.style.boxShadow = '0 0 20px rgba(192, 192, 192, 0.5)';
-                }
-            });
-        }
-
-        setTimeout(recomendarProductos, 5000);
 
         // Mensaje de despedida personalizado
         window.addEventListener('beforeunload', () => {
@@ -4679,8 +4614,7 @@
             });
         });
 
-        // Optimizar rendimiento en scroll para móviles
-        let ticking = false;
+        // Indicador de progreso de scroll - Actualización instantánea
         function updateScrollIndicator() {
             const scrolled = window.pageYOffset;
             const maxHeight = document.documentElement.scrollHeight - window.innerHeight;
@@ -4690,16 +4624,9 @@
             if (indicator) {
                 indicator.style.width = scrollPercent + '%';
             }
-
-            ticking = false;
         }
 
-        window.addEventListener('scroll', () => {
-            if (!ticking) {
-                requestAnimationFrame(updateScrollIndicator);
-                ticking = true;
-            }
-        });
+        window.addEventListener('scroll', updateScrollIndicator, { passive: true });
 
         // Finalización
         console.log('EGOZN Lifestyle Store - Fully Responsive & Ready! 🚀📱💻');
