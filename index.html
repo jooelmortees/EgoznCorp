@@ -3877,15 +3877,28 @@
                 subtotalElement.textContent = total.toFixed(0);
             }
 
-            // 🛒 GUARDAR AUTOMÁTICAMENTE EN BD SI ESTÁ LOGUEADO (sin bucle)
-            if (isUserLoggedIn && !isUpdatingCart) {
+            // 🛒 GUARDAR AUTOMÁTICAMENTE EN BD (sin bucle)
+            if (!isUpdatingCart) {
                 isUpdatingCart = true;
-                saveCartToDatabase().then(() => {
-                    isUpdatingCart = false;
-                }).catch((err) => {
-                    console.error('Error guardando:', err);
-                    isUpdatingCart = false;
-                });
+                
+                // Timeout de seguridad para resetear la bandera
+                const timeout = setTimeout(() => {
+                    if (isUpdatingCart) {
+                        console.warn('⚠️ Timeout: Reseteando bandera isUpdatingCart');
+                        isUpdatingCart = false;
+                    }
+                }, 5000);
+                
+                saveCartToDatabase()
+                    .then(() => {
+                        clearTimeout(timeout);
+                        isUpdatingCart = false;
+                    })
+                    .catch((err) => {
+                        console.error('❌ Error guardando:', err);
+                        clearTimeout(timeout);
+                        isUpdatingCart = false;
+                    });
             }
         }
 
@@ -4651,8 +4664,8 @@
         // ============== SUPABASE AUTHENTICATION ==============
         
         // SDK de Supabase
-        const SUPABASE_URL = 'https://cytfuqxdwllkrvxecwjg.supabase.co'
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN5dGZ1cXhkd2xsa3J2eGVjd2pnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYzMDQwNjksImV4cCI6MjA3MTg4MDA2OX0.ePYV-d38rJlc-iXQTAaQMB4cbfegEs_WbbqWjRDmWpw'
+        const SUPABASE_URL = 'https://spltpozzqcbrdfpuxyhr.supabase.co'
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNwbHRwb3p6cWNicmRmcHV4eWhyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA2MTE3NTcsImV4cCI6MjA3NjE4Nzc1N30.W2O9Rkc4cKxFr-rPQmeRy-VWBkCaXm_eZWMhM_4O-oA'
         
         // Importar Supabase (versión CDN)
         const supabaseScript = document.createElement('script');
@@ -5014,53 +5027,6 @@
             }
         }
 
-        // Guardar carrito del usuario en la base de datos
-        async function saveCartToDatabase() {
-            if (!supabase || carrito.length === 0) return;
-
-            try {
-                const { data: { user } } = await supabase.auth.getUser();
-                if (!user) return;
-
-                // Crear una orden pendiente
-                const { data: orderData, error: orderError } = await supabase
-                    .from('orders')
-                    .insert({
-                        user_id: user.id,
-                        total: carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0),
-                        status: 'pending'
-                    })
-                    .select();
-
-                if (orderError) throw orderError;
-
-                const orderId = orderData[0].id;
-
-                // Guardar items del carrito
-                const orderItems = carrito.map(item => ({
-                    order_id: orderId,
-                    product_name: item.nombre,
-                    product_id: item.id || item.nombre.toLowerCase().replace(/ /g, '-'),
-                    quantity: item.cantidad,
-                    price: item.precio,
-                    size: item.talla || 'M',
-                    image_url: item.imagen || ''
-                }));
-
-                const { error: itemsError } = await supabase
-                    .from('order_items')
-                    .insert(orderItems);
-
-                if (itemsError) throw itemsError;
-
-                console.log('✅ Carrito guardado en BD:', orderData[0]);
-                return orderData[0];
-                
-            } catch (error) {
-                console.error('❌ Error guardando carrito:', error);
-            }
-        }
-
         // Obtener historial de pedidos
         async function getUserOrders() {
             if (!supabase) return [];
@@ -5079,7 +5045,10 @@
                     .order('created_at', { ascending: false });
 
                 if (error) throw error;
+                
+                console.log('📦 Pedidos encontrados:', data?.length || 0);
                 return data || [];
+                
             } catch (error) {
                 console.error('❌ Error obteniendo pedidos:', error);
                 return [];
@@ -5095,51 +5064,55 @@
             console.log('🛒 Cargando carrito para usuario:', userId);
 
             try {
-                // Intentar cargar desde la tabla cart_items
+                // Cargar desde la tabla cart_items
                 const { data, error } = await supabase
                     .from('cart_items')
                     .select('*')
                     .eq('user_id', userId);
 
                 if (error) {
-                    console.log('ℹ️ Tabla cart_items no disponible, usando localStorage');
+                    console.error('❌ Error cargando desde BD:', error);
                     // Fallback a localStorage
                     const savedCart = localStorage.getItem(`egozn_cart_${userId}`);
                     if (savedCart) {
-                        try {
-                            const cartFromStorage = JSON.parse(savedCart);
-                            carrito = cartFromStorage; // REEMPLAZAR, no fusionar
-                            console.log('✅ Carrito reemplazado desde localStorage:', carrito.length, 'items');
-                        } catch (e) {
-                            console.error('Error parseando carrito desde localStorage:', e);
-                        }
+                        const cartFromStorage = JSON.parse(savedCart);
+                        carrito = cartFromStorage;
+                        console.log('✅ Carrito cargado desde localStorage:', carrito.length);
+                        actualizarCarrito();
                     }
-                    actualizarCarrito();
                     return;
                 }
 
                 if (data && data.length > 0) {
-                    // Convertir datos de BD al formato local del carrito
+                    // Convertir formato de BD a formato local
                     const cartFromDB = data.map(item => ({
                         id: item.product_id,
-                        title: item.product_name,
                         nombre: item.product_name,
-                        category: 'Lifestyle',
-                        categoria: 'Lifestyle',
-                        price: parseFloat(item.price),
+                        title: item.product_name,
                         precio: parseFloat(item.price),
-                        quantity: item.quantity,
-                        cantidad: item.quantity,
-                        size: item.size,
+                        price: parseFloat(item.price),
+                        imagen: item.image_url,
+                        image: item.image_url,
                         talla: item.size,
-                        color: 'Marrón',
-                        image: item.image_url || 'Img/EGOZN.png'
+                        size: item.size,
+                        cantidad: item.quantity,
+                        quantity: item.quantity
                     }));
 
-                    // REEMPLAZAR carrito completo, no fusionar
-                    carrito = cartFromDB;
-                    console.log('✅ Carrito reemplazado desde BD:', carrito.length, 'items');
+                    // Si hay carrito local, fusionar
+                    if (carrito.length > 0) {
+                        carrito = mergeCarritos(carrito, cartFromDB);
+                        console.log('🔄 Carritos fusionados:', carrito.length);
+                        // Guardar el resultado fusionado
+                        await saveCartToDatabase();
+                    } else {
+                        carrito = cartFromDB;
+                        console.log('✅ Carrito cargado desde BD:', carrito.length);
+                    }
+                    
                     actualizarCarrito();
+                } else {
+                    console.log('ℹ️ No hay items en el carrito remoto');
                 }
                 
             } catch (error) {
@@ -5149,55 +5122,74 @@
 
         // Guardar carrito en la base de datos
         async function saveCartToDatabase() {
-            if (!supabase || !isUserLoggedIn || isUpdatingCart) return;
+            if (!supabase) {
+                console.log('⚠️ Supabase no disponible');
+                return;
+            }
 
             try {
                 const { data: { user } } = await supabase.auth.getUser();
-                if (!user) return;
+                if (!user) {
+                    console.log('⚠️ No hay usuario logueado - no se puede guardar en BD');
+                    return;
+                }
 
-                console.log('💾 Guardando carrito en BD:', carrito.length, 'items');
+                console.log('💾 Guardando carrito en BD:', carrito.length, 'items para usuario:', user.email);
 
-                // Intentar guardar en la tabla cart_items
-                try {
-                    // Primero, eliminar items existentes del usuario
-                    const { error: deleteError } = await supabase
-                        .from('cart_items')
-                        .delete()
-                        .eq('user_id', user.id);
+                // OPCIÓN 1: Borrar todo y reinsertar (más simple y confiable)
+                const { error: deleteError } = await supabase
+                    .from('cart_items')
+                    .delete()
+                    .eq('user_id', user.id);
 
-                    if (deleteError) throw deleteError;
-
-                    // Luego, insertar items actuales del carrito
-                    if (carrito.length > 0) {
-                        const cartItems = carrito.map(item => ({
-                            user_id: user.id,
-                            product_id: item.id || `${item.title || item.nombre}-${item.size || item.talla}`,
-                            product_name: item.title || item.nombre,
-                            price: parseFloat(item.price || item.precio),
-                            image_url: item.image || 'Img/EGOZN.png',
-                            size: item.size || item.talla,
-                            quantity: item.quantity || item.cantidad
-                        }));
-
-                        const { data: insertData, error: insertError } = await supabase
-                            .from('cart_items')
-                            .insert(cartItems);
-
-                        if (insertError) throw insertError;
-                        
-                        console.log('✅ Carrito guardado en BD:', cartItems.length, 'items');
-                    } else {
-                        console.log('✅ Carrito vacío guardado (eliminados items antiguos)');
-                    }
-                } catch (dbError) {
-                    console.log('ℹ️ Usando localStorage como respaldo');
-                    // Fallback a localStorage si la tabla no existe
+                if (deleteError) {
+                    console.error('❌ Error eliminando items antiguos:', deleteError);
+                    // Fallback a localStorage
                     localStorage.setItem(`egozn_cart_${user.id}`, JSON.stringify(carrito));
-                    console.log('✅ Carrito guardado en localStorage');
+                    return;
+                }
+
+                // Insertar items actuales (si hay)
+                if (carrito.length > 0) {
+                    const cartItems = carrito.map(item => ({
+                        user_id: user.id,
+                        product_id: item.id || `${item.title || item.nombre}-${item.size || item.talla}`,
+                        product_name: item.title || item.nombre,
+                        price: parseFloat(item.price || item.precio),
+                        image_url: item.image || item.imagen || 'Img/EGOZN.png',
+                        size: item.size || item.talla || 'M',
+                        quantity: item.quantity || item.cantidad || 1
+                    }));
+
+                    const { error: insertError } = await supabase
+                        .from('cart_items')
+                        .insert(cartItems);
+
+                    if (insertError) {
+                        console.error('❌ Error insertando items:', insertError);
+                        // Fallback a localStorage
+                        localStorage.setItem(`egozn_cart_${user.id}`, JSON.stringify(carrito));
+                    } else {
+                        console.log('✅ Carrito guardado en BD:', cartItems.length, 'items');
+                        // También guardar en localStorage como respaldo
+                        localStorage.setItem(`egozn_cart_${user.id}`, JSON.stringify(carrito));
+                    }
+                } else {
+                    console.log('✅ Carrito vacío - items antiguos eliminados');
+                    localStorage.removeItem(`egozn_cart_${user.id}`);
                 }
                 
             } catch (error) {
                 console.error('❌ Error guardando carrito:', error);
+                // Fallback a localStorage en caso de error
+                try {
+                    const { data: { user } } = await supabase.auth.getUser();
+                    if (user) {
+                        localStorage.setItem(`egozn_cart_${user.id}`, JSON.stringify(carrito));
+                    }
+                } catch (err) {
+                    console.error('❌ Error en fallback:', err);
+                }
             }
         }
 
@@ -5305,16 +5297,16 @@
 
         // Función mejorada para mostrar info del usuario (incluyendo crear perfil)
         async function showUserInfo(user) {
-            // Evitar procesamiento múltiple del mismo usuario
-            if (isUserLoggedIn && cartLoadedForUser === user.id) {
-                console.log('ℹ️ Usuario ya procesado, saltando...');
+            // Evitar procesamiento múltiple del mismo usuario EN LA MISMA SESIÓN
+            if (isUserLoggedIn && cartLoadedForUser === user.id && carrito.length > 0) {
+                console.log('ℹ️ Usuario ya procesado con carrito cargado, saltando...');
                 return;
             }
             
             const profileIcon = document.querySelector('.profile-icon');
             const dropdownUserEmail = document.getElementById('dropdownUserEmail');
             
-            // Marcar como usuario logueado
+            // Marcar como usuario logueado INMEDIATAMENTE
             isUserLoggedIn = true;
             cartLoadedForUser = user.id;
             
@@ -5328,14 +5320,9 @@
             // Crear/actualizar perfil en la base de datos
             await createOrUpdateProfile(user);
             
-            // 🛒 CARGAR CARRITO SINCRONIZADO (solo si carrito local está vacío)
-            if (carrito.length === 0) {
-                await loadCartFromDatabase(user.id);
-            } else {
-                console.log('ℹ️ Manteniendo carrito local actual');
-                // Guardar carrito actual en BD para sincronizar
-                await saveCartToDatabase();
-            }
+            // 🛒 SIEMPRE CARGAR CARRITO DESDE BD AL INICIAR SESIÓN
+            console.log('🔄 Cargando carrito desde BD...');
+            await loadCartFromDatabase(user.id);
             
             console.log('👤 Usuario logueado:', user.email, '| Carrito items:', carrito.length);
         }
@@ -5355,11 +5342,11 @@
             // Cerrar dropdown si está abierto
             dropdown.classList.remove('active');
             
-            // 🛒 LIMPIAR CARRITO AL CERRAR SESIÓN
+            // 🛒 LIMPIAR CARRITO LOCAL SOLAMENTE (el carrito está guardado en BD)
             carrito = [];
             actualizarCarrito();
             
-            console.log('👤 Usuario deslogueado');
+            console.log('👤 Usuario deslogueado - Carrito local limpiado (guardado en BD)');
         }
 
         // Mostrar historial de pedidos
@@ -5376,56 +5363,51 @@
                 }
 
                 // Crear contenido del historial
-                let historyHTML = `
-                    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-                        <h2 style="color: var(--plateado-brillante); margin-bottom: 30px; text-align: center;">
-                            📦 TU HISTORIAL DE PEDIDOS
-                        </h2>
-                `;
-
-                orders.forEach(order => {
-                    const fecha = new Date(order.created_at).toLocaleDateString('es-ES');
+                let historial = '📦 TU HISTORIAL DE PEDIDOS\n\n';
+                
+                orders.forEach((order, index) => {
+                    const fecha = new Date(order.created_at).toLocaleDateString('es-ES', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
                     const items = order.order_items || [];
+                    const itemsCount = items.reduce((sum, item) => sum + item.quantity, 0);
                     
-                    historyHTML += `
-                        <div style="background: var(--gris-carbon); border: 1px solid var(--gris-oscuro); border-radius: 8px; padding: 20px; margin-bottom: 20px;">
-                            <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
-                                <div>
-                                    <strong style="color: var(--plateado-brillante);">Pedido #${order.id.substring(0, 8)}</strong>
-                                    <div style="color: var(--plateado); font-size: 14px;">${fecha}</div>
-                                </div>
-                                <div style="text-align: right;">
-                                    <div style="color: var(--plateado-brillante); font-weight: bold;">€${order.total}</div>
-                                    <div style="color: var(--dorado); font-size: 14px; text-transform: uppercase;">${order.status}</div>
-                                </div>
-                            </div>
-                            <div style="border-top: 1px solid var(--gris-oscuro); padding-top: 15px;">
-                                ${items.map(item => `
-                                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                        <span style="color: var(--plateado);">${item.product_name} ${item.size ? `(${item.size})` : ''}</span>
-                                        <span style="color: var(--plateado);">${item.quantity}x €${item.price}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `;
+                    historial += `🔸 Pedido #${order.id.substring(0, 8).toUpperCase()}\n`;
+                    historial += `   📅 Fecha: ${fecha}\n`;
+                    historial += `   💰 Total: ${order.total.toFixed(2)}€\n`;
+                    historial += `   📦 Items: ${itemsCount} producto(s)\n`;
+                    historial += `   📊 Estado: ${translateStatus(order.status)}\n`;
+                    
+                    if (items.length > 0) {
+                        historial += `   Productos:\n`;
+                        items.forEach(item => {
+                            historial += `      • ${item.product_name} (${item.size}) x${item.quantity}\n`;
+                        });
+                    }
+                    
+                    historial += '\n';
                 });
 
-                historyHTML += '</div>';
-
-                // Mostrar en un modal o alert (por ahora alert con HTML simplificado)
-                const orderList = orders.map(order => {
-                    const fecha = new Date(order.created_at).toLocaleDateString('es-ES');
-                    const items = order.order_items || [];
-                    return `� Pedido #${order.id.substring(0, 8)} - ${fecha}\n   Total: €${order.total} (${order.status})\n   Items: ${items.length} productos`;
-                }).join('\n\n');
-
-                alert('📦 TU HISTORIAL DE PEDIDOS\n\n' + orderList);
+                alert(historial);
                 
             } catch (error) {
                 console.error('Error obteniendo historial:', error);
                 alert('❌ Error cargando el historial de pedidos');
             }
+        }
+
+        // Helper para traducir estados
+        function translateStatus(status) {
+            const translations = {
+                'pending': '⏳ Pendiente',
+                'processing': '⚙️ Procesando',
+                'shipped': '🚚 Enviado',
+                'delivered': '✅ Entregado',
+                'cancelled': '❌ Cancelado'
+            };
+            return translations[status] || status;
         }
 
         // Función para finalizar compra (guardar pedido)
@@ -5441,12 +5423,89 @@
                 return;
             }
 
-            const order = await saveCartToDatabase();
-            if (order) {
-                alert('🎉 ¡Pedido creado exitosamente! ID: ' + order.id.substring(0, 8));
-                carrito.length = 0; // Vaciar carrito
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+                if (!user) {
+                    alert('🔐 Debes iniciar sesión para finalizar la compra');
+                    toggleLogin();
+                    return;
+                }
+
+                // Calcular total
+                const total = carrito.reduce((sum, item) => {
+                    const precio = item.precio || item.price || 0;
+                    const cantidad = item.cantidad || item.quantity || 1;
+                    return sum + (precio * cantidad);
+                }, 0);
+
+                console.log('🛍️ Procesando compra - Total:', total, '€');
+
+                // 1. Crear el pedido (orden)
+                const { data: orderData, error: orderError } = await supabase
+                    .from('orders')
+                    .insert({
+                        user_id: user.id,
+                        total: total,
+                        status: 'pending',
+                        payment_method: 'card',
+                        shipping_address: 'Por definir'
+                    })
+                    .select()
+                    .single();
+
+                if (orderError) throw orderError;
+
+                const orderId = orderData.id;
+                console.log('✅ Orden creada:', orderId);
+
+                // 2. Crear los items del pedido
+                const orderItems = carrito.map(item => ({
+                    order_id: orderId,
+                    product_id: item.id || `${item.title || item.nombre}-${item.size || item.talla}`,
+                    product_name: item.title || item.nombre,
+                    quantity: item.quantity || item.cantidad || 1,
+                    price: parseFloat(item.price || item.precio),
+                    size: item.size || item.talla || 'M',
+                    image_url: item.image || item.imagen || 'Img/EGOZN.png'
+                }));
+
+                const { error: itemsError } = await supabase
+                    .from('order_items')
+                    .insert(orderItems);
+
+                if (itemsError) throw itemsError;
+
+                console.log('✅ Items del pedido guardados');
+
+                // 3. Limpiar el carrito de la BD
+                const { error: clearError } = await supabase
+                    .from('cart_items')
+                    .delete()
+                    .eq('user_id', user.id);
+
+                if (clearError) console.warn('⚠️ Error limpiando carrito BD:', clearError);
+
+                // 4. Limpiar carrito local
+                carrito.length = 0;
                 actualizarCarrito();
+                
+                // 5. Limpiar localStorage
+                localStorage.removeItem(`egozn_cart_${user.id}`);
+
+                // 6. Cerrar carrito
                 toggleCarrito();
+
+                // 7. Mostrar confirmación
+                alert(`🎉 ¡Pedido realizado con éxito!\n\n` +
+                      `📦 Número de pedido: ${orderId.substring(0, 8)}\n` +
+                      `💰 Total: ${total.toFixed(2)}€\n` +
+                      `📧 Recibirás un email de confirmación`);
+
+                console.log('🎉 Compra finalizada exitosamente');
+
+            } catch (error) {
+                console.error('❌ Error procesando compra:', error);
+                alert('❌ Error procesando el pedido: ' + error.message);
             }
         }
 
